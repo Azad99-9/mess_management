@@ -54,7 +54,6 @@ class MessMenuPage extends StatelessWidget {
             ),
           ),
           bottom: TabBar(
-
             labelColor: ThemeService.secondaryColor,
             indicatorColor: ThemeService.secondaryColor,
             unselectedLabelColor: ThemeService.secondaryColor,
@@ -70,84 +69,99 @@ class MessMenuPage extends StatelessWidget {
         body: TabBarView(
           children: messMenu.keys.map((day) {
             final meals = messMenu[day]!;
-            return ListView(
-              children: meals.entries.map((meal) {
-                final mealType = meal.key;
-                final items = meal.value;
-                final isHighlighted = mealType == currentMealType;
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: ListView(
+                children: meals.entries.map((meal) {
+                  final mealType = meal.key;
+                  final items = meal.value;
+                  final isHighlighted = mealType == currentMealType;
 
-                return IntrinsicHeight(
-                  child: Container(
-                    color: isHighlighted
-                        ? ThemeService.primaryColor.withOpacity(0.05)
-                        : Colors.transparent,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Container(
-                          width: 6,
-                          constraints:
-                              BoxConstraints(maxHeight: double.infinity),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: isHighlighted
-                                ? ThemeService.primaryColor
-                                : Colors.transparent,
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Title Text
-                                Text(
-                                  mealType,
-                                  style: const TextStyle(
-                                    color: ThemeService.primaryColor,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                // Sublist items with better spacing and styling
-                                ...items.map((item) => Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 4.0),
-                                      child: Row(
-                                        children: [
-                                          // Bullet point
-                                          Container(
-                                            width: 6,
-                                            height: 6,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: ThemeService.primaryColor,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          // Space between bullet and text
-                                          Expanded(
-                                            child: Text(
-                                              item,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )),
-                              ],
+                  return IntrinsicHeight(
+                    child: Container(
+                      color: isHighlighted
+                          ? ThemeService.primaryColor.withOpacity(0.05)
+                          : Colors.transparent,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Container(
+                            width: 6,
+                            constraints:
+                                BoxConstraints(maxHeight: double.infinity),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: isHighlighted
+                                  ? ThemeService.primaryColor
+                                  : Colors.transparent,
                             ),
                           ),
-                        ),
-                      ],
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: isHighlighted ? 24 : 16,
+                                  horizontal: 16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Title Text
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: isHighlighted ? 0 : 2),
+                                    child: Text(
+                                      mealType,
+                                      style: TextStyle(
+                                        color: isHighlighted
+                                            ? ThemeService.primaryColor
+                                            : Colors.black.withOpacity(0.5),
+                                        fontSize: isHighlighted ? 24 : 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  // Sublist items with better spacing and styling
+                                  ...items.map((item) => Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 0.0),
+                                        child: Row(
+                                          children: [
+                                            // Bullet point
+                                            // Container(
+                                            //   width: isHighlighted ? 5 : 4,
+                                            //   height: isHighlighted ? 5 : 4,
+                                            //   decoration: BoxDecoration(
+                                            //     shape: BoxShape.circle,
+                                            //     color: Colors.black,
+                                            //   ),
+                                            // ),
+                                            // const SizedBox(width: 6),
+                                            // Space between bullet and text
+                                            Expanded(
+                                              child: Text(
+                                                item,
+                                                style: TextStyle(
+                                                    color: isHighlighted
+                                                        ? Colors.black
+                                                        : Colors.black
+                                                            .withOpacity(0.5),
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              }).toList(),
+                  );
+                }).toList(),
+              ),
             );
           }).toList(),
         ),
