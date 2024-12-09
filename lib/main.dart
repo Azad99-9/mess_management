@@ -2,10 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mess_management/services/theme_service.dart';
 import 'package:mess_management/views/common_issues.dart';
-import 'package:mess_management/views/complaints.dart';
 import 'package:mess_management/views/menu.dart';
+import 'package:mess_management/views/profile_page.dart';
+import 'package:mess_management/locator.dart';
+import 'package:mess_management/views/feedback_page.dart';
 
 void main() {
+  setUpLocator();
   runApp(const MyApp());
 }
 
@@ -90,18 +93,17 @@ class _MainScreenState extends State<MainScreen> {
         onPageChanged: _onPageChanged,
         children: [
           MessMenuPage(),
-          const CommonIssues(),
-          SubmitComplaintPage(),
+          FeedbackPage(),
+          CommonIssues(),
+          ProfilePage(),
         ],
       ),
       bottomNavigationBar: Container(
-        color:Colors.white,
+        color: Colors.white,
         child: BottomNavigationBar(
-
-          backgroundColor:ThemeService.primaryAccent,
+          backgroundColor: Colors.white,
           selectedItemColor: ThemeService.primaryColor,
-          unselectedLabelStyle: TextStyle(color: Colors.grey),
-          unselectedItemColor: Colors.grey,
+          unselectedItemColor: ThemeService.secondaryBackgroundColor,
           currentIndex: _currentPage,
           onTap: _onBottomNavTapped,
           items: const [
@@ -110,10 +112,13 @@ class _MainScreenState extends State<MainScreen> {
               label: 'Menu',
             ),
             BottomNavigationBarItem(
+              icon: Icon(Icons.feed_outlined),
+              label: 'Feedback',
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.auto_graph),
               label: 'Trending',
             ),
-
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: 'Profile',
