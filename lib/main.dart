@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:mess_management/services/theme_service.dart';
 import 'package:mess_management/views/common_issues.dart';
 import 'package:mess_management/views/menu.dart';
+import 'package:mess_management/views/profile_page.dart';
+import 'package:mess_management/locator.dart';
+import 'package:mess_management/views/feedback_page.dart';
 
 void main() {
+  setUpLocator();
   runApp(const MyApp());
 }
 
@@ -89,7 +93,9 @@ class _MainScreenState extends State<MainScreen> {
         onPageChanged: _onPageChanged,
         children: [
           MessMenuPage(),
+          FeedbackPage(),
           CommonIssues(),
+          ProfilePage(),
         ],
       ),
       bottomNavigationBar: Container(
@@ -97,12 +103,17 @@ class _MainScreenState extends State<MainScreen> {
         child: BottomNavigationBar(
           backgroundColor: Colors.white,
           selectedItemColor: ThemeService.primaryColor,
+          unselectedItemColor: ThemeService.secondaryBackgroundColor,
           currentIndex: _currentPage,
           onTap: _onBottomNavTapped,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.menu_book),
               label: 'Menu',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.feed_outlined),
+              label: 'Feedback',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.auto_graph),
