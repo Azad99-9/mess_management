@@ -26,6 +26,8 @@ class _CommonIssuesState extends State<CommonIssues> {
         body: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 14),
                 child: Container(
                     color: ThemeService.primaryColor,
                     child: Padding(
@@ -65,7 +67,9 @@ class _CommonIssuesState extends State<CommonIssues> {
                           ),
                         ],
                       ),
-                    ))),
+                    )),
+              ),
+            ),
             SliverList.builder(
               itemCount: trends.length,
               itemBuilder: (context, index) {

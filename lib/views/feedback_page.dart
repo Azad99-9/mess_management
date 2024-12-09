@@ -21,37 +21,6 @@ class _FeedbackPageState extends State<FeedbackPage> {
     _viewModel = locator<ProfilePageViewModel>();
   }
 
-  Future<void> _selectDate(
-      BuildContext context, TextEditingController controller) async {
-    DateTime now = DateTime.now();
-    DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: now,
-      firstDate: now.subtract(const Duration(days: 15)), // 15 days back
-      lastDate: now.add(const Duration(days: 15)), // 15 days ahead
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: ThemeService
-                  .primaryColor, // Header background and selected date color
-              onPrimary: Colors.white, // Text color on header and selected date
-              onSurface: Colors.black, // Text color for other dates
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                foregroundColor: ThemeService.primaryColor, // Button text color
-              ),
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (picked != null) {
-      controller.text = "${picked.day}-${picked.month}-${picked.year}";
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,8 +76,6 @@ class _FeedbackPageState extends State<FeedbackPage> {
                       ),
                     ),
                   ),
-                  onTap: () =>
-                      _selectDate(context, _viewModel.startDateController),
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
@@ -132,8 +99,6 @@ class _FeedbackPageState extends State<FeedbackPage> {
                       ),
                     ),
                   ),
-                  onTap: () =>
-                      _selectDate(context, _viewModel.endDateController),
                 ),
                 const SizedBox(height: 20),
                 StarRatebar(

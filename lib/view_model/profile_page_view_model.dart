@@ -12,8 +12,8 @@ class ProfilePageViewModel extends ChangeNotifier
    TextEditingController Attire =TextEditingController();
    TextEditingController Serving =TextEditingController();
    TextEditingController Washarea =TextEditingController();
-   TextEditingController startDateController = TextEditingController();
-   TextEditingController endDateController = TextEditingController();
+   TextEditingController startDateController = TextEditingController(text: "10-10-2024");
+   TextEditingController endDateController = TextEditingController(text: "11-11-2024");
 
    final formKey=GlobalKey<FormState>();
 
