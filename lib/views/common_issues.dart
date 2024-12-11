@@ -31,43 +31,56 @@ class _CommonIssuesState extends State<CommonIssues> {
                 child: Container(
                     color: ThemeService.primaryColor,
                     child: Padding(
-                      padding: EdgeInsets.fromLTRB(16, 36, 16, 14),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 16,
-                          ),
-                          const Text(
-                            'Trending issues',
-                            style: TextStyle(
-                              color: ThemeService.secondaryColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22,
+                        padding: EdgeInsets.fromLTRB(0, 36, 16, 14),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Center(child: IconButton(
+                                onPressed: () {
+                                  Scaffold.of(context).openDrawer();
+                                },
+                                icon: Icon(
+                                  Icons.menu,
+                                  color: ThemeService.secondaryColor,
+                                )),),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 16,
+                                ),
+                                const Text(
+                                  'Trending issues',
+                                  style: TextStyle(
+                                    color: ThemeService.secondaryColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 22,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 4,
+                                  ),
+                                  child: RichText(
+                                      text: TextSpan(
+                                          text: 'Upvote ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14),
+                                          children: [
+                                        TextSpan(
+                                            text: ' for Immediate resolution',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                letterSpacing: 1,
+                                                fontSize: 12)),
+                                      ])),
+                                ),
+                              ],
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              left: 4,
-                            ),
-                            child: RichText(
-                                text: TextSpan(
-                                    text: 'Upvote ',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14),
-                                    children: [
-                                  TextSpan(
-                                      text: ' for Immediate resolution',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          letterSpacing: 1,
-                                          fontSize: 12)),
-                                ])),
-                          ),
-                        ],
-                      ),
-                    )),
+                          ],
+                        ))),
               ),
             ),
             SliverList.builder(
