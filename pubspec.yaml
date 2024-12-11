@@ -45,6 +45,10 @@ dependencies:
   intl: ^0.20.1
   image_picker: ^1.1.2
   dropdown_button2: ^2.3.9
+  firebase_auth: ^5.3.4
+  google_sign_in: ^6.2.2
+  cloud_firestore: ^5.5.1
+  firebase_storage: ^12.3.7
 
 dev_dependencies:
   flutter_test:

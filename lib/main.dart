@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mess_management/constants/routes.dart';
+import 'package:mess_management/firebase_options.dart';
+import 'package:mess_management/router.dart';
 import 'package:mess_management/services/theme_service.dart';
 import 'package:mess_management/views/common_issues.dart';
 import 'package:mess_management/views/complaints.dart';
@@ -8,7 +12,11 @@ import 'package:mess_management/views/profile_page.dart';
 import 'package:mess_management/locator.dart';
 import 'package:mess_management/views/feedback_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   setUpLocator();
   runApp(const MyApp());
 }
@@ -40,7 +48,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: ThemeService.primaryColor),
         useMaterial3: true,
       ),
-      home: MainScreen(),
+      navigatorKey: navigationService.navigatorKey,
+      initialRoute: userService.loggedIn ? Routes.home : Routes.signIn,
+      onGenerateRoute: generateRoute,
     );
   }
 }

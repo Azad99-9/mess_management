@@ -103,33 +103,33 @@ class _FeedbackPageState extends State<FeedbackPage> {
                 const SizedBox(height: 20),
                 StarRatebar(
                     text: "Timeliness of service",
-                    controller: _viewModel.Timeliness),
+                    controller: _viewModel.timeliness),
                 StarRatebar(
                     text: "Cleanliness of surroundings",
-                    controller: _viewModel.Cleanliness),
+                    controller: _viewModel.cleanliness),
                 StarRatebar(
-                    text: "Quality of food", controller: _viewModel.Quality),
+                    text: "Quality of food", controller: _viewModel.quality),
                 StarRatebar(
                     text: "Taste of Curries/Fried",
-                    controller: _viewModel.Taste),
+                    controller: _viewModel.taste),
                 StarRatebar(
                     text: "Snacks,Tea and Coffee",
-                    controller: _viewModel.Snacks),
+                    controller: _viewModel.snacks),
                 StarRatebar(
                     text: "Quantity of food as per menu",
-                    controller: _viewModel.Quantity),
+                    controller: _viewModel.quantity),
                 StarRatebar(
                     text: "Courtesy of services from contractor employees",
-                    controller: _viewModel.Courtesy),
+                    controller: _viewModel.courtesy),
                 StarRatebar(
                     text: "Appropriate attire of contractor employees",
-                    controller: _viewModel.Attire),
+                    controller: _viewModel.attire),
                 StarRatebar(
                     text: "Cooking and Serving as per menu",
-                    controller: _viewModel.Serving),
+                    controller: _viewModel.serving),
                 StarRatebar(
                     text: "Cleanliness of wash area",
-                    controller: _viewModel.Washarea),
+                    controller: _viewModel.washArea),
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
