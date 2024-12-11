@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:mess_management/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:mess_management/services/theme_service.dart';
 import 'package:mess_management/views/common_issues.dart';
@@ -6,9 +7,17 @@ import 'package:mess_management/views/menu.dart';
 import 'package:mess_management/views/profile_page.dart';
 import 'package:mess_management/locator.dart';
 import 'package:mess_management/views/feedback_page.dart';
+import 'package:mess_management/views/signin_page.dart';
+import 'package:mess_management/views/signin_details_page.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   setUpLocator();
+  notificationService.requestNotificationPermission();
+  notificationService.getToken();
   runApp(const MyApp());
 }
 
@@ -88,44 +97,45 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: _onPageChanged,
-        children: [
-          MessMenuPage(),
-          FeedbackPage(),
-          CommonIssues(),
-          ProfilePage(),
-        ],
-      ),
-      bottomNavigationBar: Container(
-        color: Colors.white,
-        child: BottomNavigationBar(
-          backgroundColor: Colors.white,
-          selectedItemColor: ThemeService.primaryColor,
-          unselectedItemColor: ThemeService.secondaryBackgroundColor,
-          currentIndex: _currentPage,
-          onTap: _onBottomNavTapped,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.menu_book),
-              label: 'Menu',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.feed_outlined),
-              label: 'Feedback',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.auto_graph),
-              label: 'Trending',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
-        ),
-      ),
+      body: SigninDetailsPage(),
+      // body: PageView(
+      //   controller: _pageController,
+      //   onPageChanged: _onPageChanged,
+      //   children: [
+      //     MessMenuPage(),
+      //     FeedbackPage(),
+      //     CommonIssues(),
+      //     ProfilePage(),
+      //   ],
+      // ),
+      // bottomNavigationBar: Container(
+      //   color: Colors.white,
+      //   child: BottomNavigationBar(
+      //     backgroundColor: Colors.white,
+      //     selectedItemColor: ThemeService.primaryColor,
+      //     unselectedItemColor: ThemeService.secondaryBackgroundColor,
+      //     currentIndex: _currentPage,
+      //     onTap: _onBottomNavTapped,
+      //     items: const [
+      //       BottomNavigationBarItem(
+      //         icon: Icon(Icons.menu_book),
+      //         label: 'Menu',
+      //       ),
+      //       BottomNavigationBarItem(
+      //         icon: Icon(Icons.feed_outlined),
+      //         label: 'Feedback',
+      //       ),
+      //       BottomNavigationBarItem(
+      //         icon: Icon(Icons.auto_graph),
+      //         label: 'Trending',
+      //       ),
+      //       BottomNavigationBarItem(
+      //         icon: Icon(Icons.person),
+      //         label: 'Profile',
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 }

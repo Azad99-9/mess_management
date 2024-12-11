@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'mess-management-250df.firebasestorage.app',
     measurementId: 'G-3M62C3BZ1D',
   );
+
 }
