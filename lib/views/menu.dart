@@ -46,6 +46,9 @@ class MessMenuPage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: ThemeService.primaryAccent,
         appBar: AppBar(
+          leading: IconButton(onPressed: () {
+            Scaffold.of(context).openDrawer();
+          }, icon: Icon(Icons.menu, color: ThemeService.secondaryColor,)),
           title: const Text(
             'Menu',
             style: TextStyle(

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mess_management/services/theme_service.dart';
 import 'package:mess_management/views/common_issues.dart';
+import 'package:mess_management/views/complaints.dart';
 import 'package:mess_management/views/menu.dart';
 import 'package:mess_management/views/profile_page.dart';
 import 'package:mess_management/locator.dart';
@@ -88,12 +89,128 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        backgroundColor: ThemeService.primaryAccent,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: ThemeService.primaryColor,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'RGUKT',
+                    style: TextStyle(
+                      color: ThemeService.secondaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 28,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  Text(
+                    'Mess Management System',
+                    style: TextStyle(
+                      color: ThemeService.secondaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => FeedbackPage()));
+              },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.feedback_outlined,
+                      size: 35,
+                      color: ThemeService.primaryColor,
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      'Feedback',
+                      style: TextStyle(
+                          color: Colors.black.withOpacity(0.6),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SubmitComplaintPage()));
+              },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.report_gmailerrorred,
+                      size: 35,
+                      color: ThemeService.primaryColor,
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      'Complaints',
+                      style: TextStyle(
+                          color: Colors.black.withOpacity(0.6),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // ListTile(
+            //   leading: Icon(
+            //     Icons.report_gmailerrorred,
+            //     size: 40,
+            //   ),
+            //   title: Text(
+            //     'Complaints',
+            //     style: TextStyle(
+            //         color: Colors.black.withOpacity(0.6),
+            //         fontSize: 16,
+            //         fontWeight: FontWeight.bold),
+            //   ),
+            //   onTap: () {
+            //     // Handle menu tap
+            //     Navigator.pop(context); // Closes the drawer
+            //   },
+            // ),
+          ],
+        ),
+      ),
       body: PageView(
         controller: _pageController,
         onPageChanged: _onPageChanged,
         children: [
           MessMenuPage(),
-          FeedbackPage(),
           CommonIssues(),
           ProfilePage(),
         ],
@@ -110,10 +227,6 @@ class _MainScreenState extends State<MainScreen> {
             BottomNavigationBarItem(
               icon: Icon(Icons.menu_book),
               label: 'Menu',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.feed_outlined),
-              label: 'Feedback',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.auto_graph),
