@@ -1,72 +1,21 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:mess_management/locator.dart';
 import 'package:mess_management/services/theme_service.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:mess_management/view_model/complaints_page_view_model.dart';
+import 'package:stacked/stacked.dart';
 
-class SubmitComplaintPage extends StatefulWidget {
-  const SubmitComplaintPage({Key? key}) : super(key: key);
-
-  @override
-  State<SubmitComplaintPage> createState() => _SubmitComplaintPageState();
-}
-
-class _SubmitComplaintPageState extends State<SubmitComplaintPage> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  String? _selectedCategory;
-  List<String> _categories = ['Food', 'Hygiene', 'Service', 'Other'];
-  String? _attachmentPath;
-
-  void _submitComplaint() {
-    if (_formKey.currentState!.validate()) {
-      final title = _titleController.text;
-      final description = _descriptionController.text;
-      final category = _selectedCategory;
-      final attachment = _attachmentPath;
-
-      // Handle complaint submission logic (e.g., API call)
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Complaint submitted successfully!')),
-      );
-
-      // Clear the form after submission
-      _titleController.clear();
-      _descriptionController.clear();
-      setState(() {
-        _selectedCategory = null;
-        _attachmentPath = null;
-      });
-    }
-  }
-
-  Future<void> _pickAttachment() async {
-    final ImagePicker picker = ImagePicker();
-
-    try {
-      // Pick an image
-      final XFile? pickedFile =
-          await picker.pickImage(source: ImageSource.gallery);
-
-      if (pickedFile != null) {
-        setState(() {
-          _attachmentPath = pickedFile.path; // Store the picked image path
-        });
-      } else {
-        // User canceled the picker
-        setState(() {
-          _attachmentPath = null;
-        });
-      }
-    } catch (e) {
-      // Handle any errors
-      print('Error picking image: $e');
-    }
-  }
+class SubmitComplaintPage extends StackedView<ComplaintsPageViewModel> {
+  const SubmitComplaintPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  ComplaintsPageViewModel viewModelBuilder(context) =>
+      ComplaintsPageViewModel();
+
+  @override
+  Widget builder(
+      BuildContext context, ComplaintsPageViewModel _viewModel, Widget? child) {
+    _viewModel.context = context;
     return Scaffold(
       backgroundColor: ThemeService.primaryAccent,
       body: CustomScrollView(
@@ -117,14 +66,14 @@ class _SubmitComplaintPageState extends State<SubmitComplaintPage> {
           SliverList(
             delegate: SliverChildListDelegate([
               Form(
-                  key: _formKey,
+                  key: _viewModel.formKey,
                   child: Padding(
                     padding: EdgeInsets.all(16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextFormField(
-                          controller: _titleController,
+                          controller: _viewModel.titleController,
                           decoration: const InputDecoration(
                             focusColor: ThemeService.primaryColor,
                             focusedBorder: OutlineInputBorder(
@@ -152,7 +101,7 @@ class _SubmitComplaintPageState extends State<SubmitComplaintPage> {
                         ),
                         const SizedBox(height: 16),
                         TextFormField(
-                          controller: _descriptionController,
+                          controller: _viewModel.descriptionController,
                           decoration: InputDecoration(
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -182,8 +131,8 @@ class _SubmitComplaintPageState extends State<SubmitComplaintPage> {
                         DropdownButtonFormField2<String>(
                           // selectedItemBuilder:,
 
-                          value: _selectedCategory,
-                          items: _categories
+                          value: _viewModel.selectedCategory,
+                          items: _viewModel.categories
                               .map((category) => DropdownMenuItem<String>(
                                     value: category,
                                     child: IntrinsicWidth(
@@ -201,7 +150,7 @@ class _SubmitComplaintPageState extends State<SubmitComplaintPage> {
                                           ],
                                         ),
                                         //   decoration: BoxDecoration(
-                                        //       color: category == _selectedCategory
+                                        //       color: category == _viewModel.selectedCategory
                                         //           ? ThemeService.primaryColor
                                         //               .withOpacity(0.05)
                                         //           : Colors.white),
@@ -239,9 +188,7 @@ class _SubmitComplaintPageState extends State<SubmitComplaintPage> {
                             ),
                           ),
                           onChanged: (value) {
-                            setState(() {
-                              _selectedCategory = value!;
-                            });
+                            _viewModel.updateSelected(value);
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -259,19 +206,19 @@ class _SubmitComplaintPageState extends State<SubmitComplaintPage> {
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold),
                           ),
-                          subtitle:
-                              Text(_attachmentPath ?? 'No attachment selected'),
+                          subtitle: Text(_viewModel.attachmentPath ??
+                              'No attachment selected'),
                           trailing: IconButton(
                             icon: const Icon(
                               Icons.attach_file,
                               color: ThemeService.primaryColor,
                             ),
-                            onPressed: _pickAttachment,
+                            onPressed: _viewModel.pickAttachment,
                           ),
                         ),
                         const SizedBox(height: 16),
                         ElevatedButton(
-                          onPressed: _submitComplaint,
+                          onPressed: _viewModel.submitComplaint,
                           style: ButtonStyle(
                               shape: WidgetStatePropertyAll(
                                 RoundedRectangleBorder(

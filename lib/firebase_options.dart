@@ -42,17 +42,17 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyB69ELzb7fP0CslaSf4mVnAydC_2pITQuc',
-    appId: '1:1036113362614:web:f841bd6b1102769d83b017',
+    appId: '1:1036113362614:web:f48fd0d898878b2c83b017',
     messagingSenderId: '1036113362614',
     projectId: 'mess-management-250df',
     authDomain: 'mess-management-250df.firebaseapp.com',
     storageBucket: 'mess-management-250df.firebasestorage.app',
-    measurementId: 'G-DX0HVW1JP2',
+    measurementId: 'G-RB8617VMS1',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBo8wm0iTfAhqLT-zmtSNk9rIkHJtj_Z5s',
-    appId: '1:1036113362614:android:95fe0b3501aa278583b017',
+    appId: '1:1036113362614:android:f4802b93a6cbe1b883b017',
     messagingSenderId: '1036113362614',
     projectId: 'mess-management-250df',
     storageBucket: 'mess-management-250df.firebasestorage.app',
@@ -60,7 +60,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCKtxH3O9MBCwuW4ucUDyi4Zo2gEUrgV-E',
-    appId: '1:1036113362614:ios:7b84573e5316d35583b017',
+    appId: '1:1036113362614:ios:c6e866bf2d6713ca83b017',
     messagingSenderId: '1036113362614',
     projectId: 'mess-management-250df',
     storageBucket: 'mess-management-250df.firebasestorage.app',
@@ -69,7 +69,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyCKtxH3O9MBCwuW4ucUDyi4Zo2gEUrgV-E',
-    appId: '1:1036113362614:ios:7b84573e5316d35583b017',
+    appId: '1:1036113362614:ios:c6e866bf2d6713ca83b017',
     messagingSenderId: '1036113362614',
     projectId: 'mess-management-250df',
     storageBucket: 'mess-management-250df.firebasestorage.app',
@@ -78,12 +78,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyB69ELzb7fP0CslaSf4mVnAydC_2pITQuc',
-    appId: '1:1036113362614:web:90596a090db1eb6b83b017',
+    appId: '1:1036113362614:web:6360c856405d511d83b017',
     messagingSenderId: '1036113362614',
     projectId: 'mess-management-250df',
     authDomain: 'mess-management-250df.firebaseapp.com',
     storageBucket: 'mess-management-250df.firebasestorage.app',
-    measurementId: 'G-3M62C3BZ1D',
+    measurementId: 'G-RG0SR010G7',
   );
 
 }

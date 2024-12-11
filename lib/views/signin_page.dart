@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mess_management/constants/routes.dart';
+import 'package:mess_management/locator.dart';
 import 'package:mess_management/services/theme_service.dart';
 import 'package:mess_management/services/size_config.dart';
+import 'package:mess_management/services/user_service.dart';
 
 class SigninPage extends StatefulWidget {
   const SigninPage({super.key});
@@ -61,7 +66,18 @@ class _SigninPageState extends State<SigninPage> {
               height: SizeConfig.screenHeight * 0.05,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                final userData = await userService.googleSignIn();
+                if (userService.loggedIn) {
+                  final docRef = FirebaseFirestore.instance.collection('users').doc(userData?.uid);
+                  final DocumentSnapshot snapshot = await docRef.get();
+                  if (!snapshot.exists) {
+                    navigationService.pushScreen(Routes.signUp, arguments: userData);
+                  } else {
+                    navigationService.pushScreen(Routes.menu);
+                  }
+                }
+              },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.all(0),
                 maximumSize: const Size(300, 200),
@@ -111,7 +127,9 @@ class _SigninPageState extends State<SigninPage> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () async {
+                    print(userService.loggedIn);
+                  },
                   child: Text(
                     "Login",
                     style: TextStyle(
