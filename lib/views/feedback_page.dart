@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mess_management/services/size_config.dart';
 import 'package:mess_management/services/theme_service.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:mess_management/view_model/profile_page_view_model.dart';
+import 'package:mess_management/view_model/feedback_page_view_model.dart';
 import 'package:mess_management/locator.dart';
 import 'package:mess_management/widgets/star_ratebar.dart';
 
@@ -14,11 +14,11 @@ class FeedbackPage extends StatefulWidget {
 }
 
 class _FeedbackPageState extends State<FeedbackPage> {
-  late final ProfilePageViewModel _viewModel;
+  late final FeedbackPageViewModel _viewModel;
   @override
   void initState() {
     super.initState();
-    _viewModel = locator<ProfilePageViewModel>();
+    _viewModel = locator<FeedbackPageViewModel>();
   }
 
 

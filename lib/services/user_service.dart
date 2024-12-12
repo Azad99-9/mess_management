@@ -10,12 +10,14 @@ class UserService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool get loggedIn => _auth.currentUser != null;
+  User? get getUser => _auth.currentUser;
 
   UserService() {
     _auth.authStateChanges().listen((onData) {
       print(onData);
     });
   }
+
 
   Future<User?> googleSignIn() async {
     try {

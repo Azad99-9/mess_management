@@ -32,6 +32,7 @@ class SigninDetailsViewModel extends ChangeNotifier {
       await userService.createNewUser(
         UserModel(
             uid: userDetails.uid,
+            name: nameController.text,
             email: emailController.text,
             phoneNumber: phoneController.text,
             gender: genderController.text),

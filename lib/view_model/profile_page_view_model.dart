@@ -1,52 +1,158 @@
-import 'package:flutter/material.dart';
-import 'package:mess_management/model/response_model.dart';
-import 'package:mess_management/services/db_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mess_management/model/complaint_model.dart';
+import 'package:mess_management/model/user_model.dart';
+import 'package:stacked/stacked.dart';
 import 'package:mess_management/services/user_service.dart';
+import 'package:mess_management/locator.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 
-class ProfilePageViewModel extends ChangeNotifier {
-  TextEditingController timeliness = TextEditingController();
-  TextEditingController cleanliness = TextEditingController();
-  TextEditingController quality = TextEditingController();
-  TextEditingController taste = TextEditingController();
-  TextEditingController snacks = TextEditingController();
-  TextEditingController quantity = TextEditingController();
-  TextEditingController courtesy = TextEditingController();
-  TextEditingController attire = TextEditingController();
-  TextEditingController serving = TextEditingController();
-  TextEditingController washArea = TextEditingController();
-  TextEditingController startDateController =
-      TextEditingController(text: "10-10-2024");
-  TextEditingController endDateController =
-      TextEditingController(text: "11-11-2024");
+import 'package:mess_management/services/db_service.dart';
+class ProfilePageViewModel extends BaseViewModel{
 
-  final formKey = GlobalKey<FormState>();
+  BuildContext?context;
+  String? attachmentPath;
+   late  UserService _userService;
+   UserModel?_currentUser;
+   List<ComplaintModel>_complaints=[];
+   UserModel?  get currentUser=>_currentUser;
+   List<ComplaintModel> get complaints=>_complaints;
 
-  void submit() async {
-    final exists = await DBService.feedbackResponses
-        .where('uid', isEqualTo: UserService.currentUser!.uid)
-        .where('startDate', isEqualTo: startDateController.text)
-        .where('endDate', isEqualTo: endDateController.text)
-        .get();
-    if (exists.docs.isEmpty) {
-      await DBService.feedbackResponses.add(
-        ResponseModel(
-          startDate: startDateController.text,
-          endDate: endDateController.text,
-          timeliness: double.parse(timeliness.text ?? '0'),
-          cleanliness: double.parse(cleanliness.text ?? '0'),
-          quality: double.parse(quality.text ?? '0'),
-          taste: double.parse(taste.text ?? '0'),
-          snacks: double.parse(snacks.text ?? '0'),
-          quantity: double.parse(quantity.text ?? '0'),
-          courtesy: double.parse(courtesy.text ?? '0'),
-          attire: double.parse(attire.text ?? '0'),
-          serving: double.parse(serving.text ?? '0'),
-          washArea: double.parse(washArea.text ?? '0'),
-          uid: UserService.currentUser!.uid,
-        ).toJson(),
-      );
-    } else {
-      print('already exists');
-    }
+
+   ProfilePageViewModel() {
+     _userService = locator<UserService>();
+   }
+   void fetchCurrentUser() async {
+     try {
+       setBusy(true);
+       final user = _userService.getUser;
+       print(user!.uid);
+       final userSnapShot = await DBService.users.doc(user!.uid).get();
+       if (userSnapShot.exists) {
+         final userDetails = UserModel.fromJson(userSnapShot.data() as Map<String, dynamic>);
+         _currentUser =userDetails;
+         notifyListeners();
+       } else {
+         print("User document does not exist.");
+       }
+     } catch (error) {
+       print("Error fetching user data: $error");
+     }
+     finally{
+       setBusy(false);
+     }
+   }
+   void fetchUserComplaints() async {
+     try {
+       setBusy(true);
+       final user = _userService.getUser;
+       if (user != null) {  // Null check for user
+         final querySnapshot = await DBService.complaints.where('uid', isEqualTo: user.uid).get();
+         if (querySnapshot.docs.isNotEmpty) {
+           List<ComplaintModel> complaintsList = [];
+           for (var doc in querySnapshot.docs) {
+             final complaintDetails = ComplaintModel.fromJson(doc.data() as Map<String, dynamic>);
+             complaintsList.add(complaintDetails);
+           }
+           _complaints = complaintsList;
+           notifyListeners();
+         } else {
+           print("No complaints exist.");
+         }
+       } else {
+         print("User is not authenticated.");
+       }
+     } catch (error) {
+       print("Error fetching complaints data: $error");
+     } finally {
+       setBusy(false);
+     }
+   }
+
+   Future<void> pickAttachment() async {
+     final ImagePicker picker = ImagePicker();
+
+     try {
+       // Pick an image
+       final XFile? pickedFile =
+       await picker.pickImage(source: ImageSource.gallery);
+
+       if (pickedFile != null) {
+         attachmentPath = pickedFile.path;
+         _showMyDialog(attachmentPath!);
+       } else {
+         // User canceled the picker
+         attachmentPath = null;
+       }
+     } catch (e) {
+       // Handle any errors
+       print('Error picking image: $e');
+     }
+     print(attachmentPath);
+     notifyListeners();
+   }
+
+  Future<void> _showMyDialog(String attachment) async {
+    return showDialog<void>(
+      context: context!,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Update Profile'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Would you like to update your profile picture?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+              },
+            ),
+            TextButton(
+              child: const Text('Update'),
+              onPressed: () async {
+                if (attachment != null) {
+                  try {
+                    final storageRef = FirebaseStorage.instance
+                        .ref()
+                        .child('profile_pictures/${DateTime.now().millisecondsSinceEpoch}.jpg');
+                    final uploadTask = storageRef.putFile(File(attachment));
+                    await uploadTask;
+
+                    final user = _userService.getUser;
+                    if (user != null) {
+                      String downloadUrl = await storageRef.getDownloadURL();
+                      print("downloadURL $downloadUrl");
+                      await DBService.users.doc(user.uid).update({'imageURL': downloadUrl});
+
+                      // Update local state
+                      notifyListeners();
+                      ScaffoldMessenger.of(context!).showSnackBar(
+                        const SnackBar(content: Text('Profile updated successfully!')),
+                      );
+                    }
+                  } catch (error) {
+                    print('Error updating profile picture: $error');
+                    ScaffoldMessenger.of(context!).showSnackBar(
+                      const SnackBar(content: Text('Failed to update profile. Please try again.')),
+                    );
+                  } finally {
+                    Navigator.of(context).pop(); // Close dialog
+                  }
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
+
 }
