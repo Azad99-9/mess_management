@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mess_management/services/size_config.dart';
 import 'package:mess_management/services/theme_service.dart';
@@ -5,7 +6,9 @@ import 'package:mess_management/view_model/signin_details_view_model.dart';
 import 'package:mess_management/locator.dart';
 
 class SigninDetailsPage extends StatefulWidget {
-  const SigninDetailsPage({super.key});
+  const SigninDetailsPage({super.key, required this.userDetails});
+
+  final User userDetails;
 
   @override
   State<SigninDetailsPage> createState() => _SigninDetailsPageState();
@@ -17,6 +20,7 @@ class _SigninDetailsPageState extends State<SigninDetailsPage> {
   void initState() {
     super.initState();
     _viewModel = locator<SigninDetailsViewModel>();
+    _viewModel.initialise(widget.userDetails);
   }
 
   @override
@@ -68,7 +72,6 @@ class _SigninDetailsPageState extends State<SigninDetailsPage> {
                     cursorColor: ThemeService.primaryColor,
                     controller: _viewModel.nameController,
                     focusNode: _viewModel.nameFocus,
-                    readOnly: true,
                     onTap: () {},
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.person),
@@ -99,9 +102,10 @@ class _SigninDetailsPageState extends State<SigninDetailsPage> {
                     cursorColor: ThemeService.primaryColor,
                     controller: _viewModel.emailController,
                     focusNode: _viewModel.emailFocus,
+                    enabled: false,
                     readOnly: true,
                     onTap: () {},
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.email),
                       prefixIconColor: ThemeService.secondaryBackgroundColor,
                       labelText: "Email",

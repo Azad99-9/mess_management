@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mess_management/constants/routes.dart';
+import 'package:mess_management/locator.dart';
 import 'package:mess_management/services/theme_service.dart';
+import 'package:mess_management/services/user_service.dart';
 
 class MessMenuPage extends StatelessWidget {
   // Sample data for mess menu
@@ -56,6 +59,14 @@ class MessMenuPage extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
+          actions: [
+            IconButton(onPressed: () {
+              userService.logOut();
+              if (userService.loggedIn) {
+                navigationService.removeAllAndPush(Routes.signIn, Routes.signIn);
+              }
+            }, icon: Icon(Icons.logout))
+          ],
           bottom: TabBar(
             labelColor: ThemeService.secondaryColor,
             indicatorColor: ThemeService.secondaryColor,
