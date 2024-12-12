@@ -9,11 +9,11 @@ import 'package:mess_management/views/signin_details_page.dart';
 
 GetIt locator = GetIt.instance;
 
-final sizeConfig=locator<SizeConfig>();
-final notificationService=locator<NotificationServices>();
+final sizeConfig = locator<SizeConfig>();
+final notificationService = locator<NotificationServices>();
 setUpLocator() {
   locator.registerSingleton(NotificationServices());
   locator.registerSingleton(SizeConfig());
   locator.registerFactory(() => ProfilePageViewModel());
-  locator.registerFactory(()=>SigninDetailsViewModel());
+  locator.registerFactory(() => SigninDetailsViewModel());
 }

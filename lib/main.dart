@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:mess_management/firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:mess_management/services/theme_service.dart';
 import 'package:mess_management/views/common_issues.dart';
@@ -8,9 +9,21 @@ import 'package:mess_management/views/profile_page.dart';
 import 'package:mess_management/locator.dart';
 import 'package:mess_management/views/feedback_page.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Set up locator after Firebase initialization
   setUpLocator();
-  runApp(const MyApp());
+
+  // Request notification permission
+  notificationService.requestNotificationPermission();
+  notificationService.getToken();
+  notificationService.FirebaseInit();
 }
 
 class MyApp extends StatelessWidget {
