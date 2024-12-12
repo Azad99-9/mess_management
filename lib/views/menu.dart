@@ -2,56 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:mess_management/constants/routes.dart';
 import 'package:mess_management/locator.dart';
 import 'package:mess_management/services/theme_service.dart';
+import 'package:mess_management/model/menu_model.dart';
 import 'package:mess_management/services/user_service.dart';
+import 'package:mess_management/locator.dart';
+import 'package:mess_management/view_model/menu_view_model.dart';
+import 'package:stacked/stacked.dart';
 
-class MessMenuPage extends StatelessWidget {
-  // Sample data for mess menu
-  final Map<String, Map<String, List<String>>> messMenu = {
-    'Monday': {
-      'Breakfast': ['Pancakes', 'Omelette', 'Milk'],
-      'Lunch': ['Rice and Curry', 'Paneer Butter Masala', 'Roti'],
-      'Snacks': ['Samosa', 'Tea'],
-      'Dinner': ['Chapati', 'Dal Tadka', 'Mixed Veg Curry'],
-    },
-    'Tuesday': {
-      'Breakfast': ['Idli', 'Sambar', 'Coconut Chutney'],
-      'Lunch': ['Veg Pulao', 'Raita', 'Curd Rice'],
-      'Snacks': ['Pakoras', 'Coffee'],
-      'Dinner': ['Noodles', 'Manchurian', 'Soup'],
-    },
-    'Wednesday': {
-      'Breakfast': ['Paratha', 'Pickle', 'Curd'],
-      'Lunch': ['Fried Rice', 'Chili Paneer', 'Soup'],
-      'Snacks': ['Veg Sandwich', 'Lemonade'],
-      'Dinner': ['Chapati', 'Shahi Paneer', 'Rice'],
-    },
-    'Thursday': {
-      'Breakfast': ['Poha', 'Sev', 'Tea'],
-      'Lunch': ['Dal Fry', 'Jeera Rice', 'Salad'],
-      'Snacks': ['Banana', 'Green Tea'],
-      'Dinner': ['Pulao', 'Kadhi', 'Papad'],
-    },
-    'Friday': {
-      'Breakfast': ['Bread Toast', 'Butter', 'Juice'],
-      'Lunch': ['Rajma', 'Rice', 'Chapati'],
-      'Snacks': ['Biscuits', 'Cold Coffee'],
-      'Dinner': ['Pizza', 'Pasta', 'Salad'],
-    },
-  };
+class MessMenuPage extends StackedView<MenuViewModel> {
+  @override
+  MenuViewModel viewModelBuilder(context) => MenuViewModel();
+  @override
+  void onViewModelReady(MenuViewModel viewModel) {
+    viewModel.fetchMenu();
+  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget builder(BuildContext context, MenuViewModel viewModel, Widget? child) {
+    if (viewModel.isBusy) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    MenuModel? menuData = viewModel.menuData;
+    if (menuData == null) {
+      return const Center(child: Text("Failed to load menu"));
+    }
     final currentTime = DateTime.now();
     final currentMealType = _getCurrentMealType(currentTime);
-
     return DefaultTabController(
-      length: messMenu.keys.length,
+      length: menuData.data.keys.length,
       child: Scaffold(
         backgroundColor: ThemeService.primaryAccent,
         appBar: AppBar(
-          leading: IconButton(onPressed: () {
-            Scaffold.of(context).openDrawer();
-          }, icon: Icon(Icons.menu, color: ThemeService.secondaryColor,)),
+          leading: IconButton(
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              icon: Icon(
+                Icons.menu,
+                color: ThemeService.secondaryColor,
+              )),
           title: const Text(
             'Menu',
             style: TextStyle(
@@ -60,19 +48,22 @@ class MessMenuPage extends StatelessWidget {
             ),
           ),
           actions: [
-            IconButton(onPressed: () {
-              userService.logOut();
-              if (userService.loggedIn) {
-                navigationService.removeAllAndPush(Routes.signIn, Routes.signIn);
-              }
-            }, icon: Icon(Icons.logout))
+            IconButton(
+                onPressed: () {
+                  userService.logOut();
+                  if (userService.loggedIn) {
+                    navigationService.removeAllAndPush(
+                        Routes.signIn, Routes.signIn);
+                  }
+                },
+                icon: Icon(Icons.logout))
           ],
           bottom: TabBar(
             labelColor: ThemeService.secondaryColor,
             indicatorColor: ThemeService.secondaryColor,
             unselectedLabelColor: ThemeService.secondaryColor,
             isScrollable: true,
-            tabs: messMenu.keys
+            tabs: menuData.data.keys
                 .map((day) => Tab(
                       text: day,
                     ))
@@ -81,15 +72,22 @@ class MessMenuPage extends StatelessWidget {
           backgroundColor: ThemeService.primaryColor,
         ),
         body: TabBarView(
-          children: messMenu.keys.map((day) {
-            final meals = messMenu[day]!;
+          children: menuData.data.keys.map((day) {
+            final dayData = menuData.data[day]!;
+            final meals = {
+              'breakFast': dayData.breakFast,
+              'lunch': dayData.lunch,
+              'snacks': dayData.snacks,
+              'dinner': dayData.dinner,
+            };
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 8),
               child: ListView(
                 children: meals.entries.map((meal) {
                   final mealType = meal.key;
                   final items = meal.value;
-                  final isHighlighted = mealType == currentMealType;
+                  final isHighlighted =
+                      mealType.toLowerCase() == currentMealType.toLowerCase();
 
                   return IntrinsicHeight(
                     child: Container(
@@ -134,7 +132,7 @@ class MessMenuPage extends StatelessWidget {
                                     ),
                                   ),
                                   // Sublist items with better spacing and styling
-                                  ...items.map((item) => Padding(
+                                  ...items.map<Widget>((item) => Padding(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 0.0),
                                         child: Row(
@@ -152,7 +150,7 @@ class MessMenuPage extends StatelessWidget {
                                             // Space between bullet and text
                                             Expanded(
                                               child: Text(
-                                                item,
+                                                "${item.itemName} (${item.quantityServed},${item.grams} grams, ${item.calories} cal)",
                                                 style: TextStyle(
                                                     color: isHighlighted
                                                         ? Colors.black

@@ -1,9 +1,10 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationServices {
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin=FlutterLocalNotificationsPlugin();
+  // final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin=FlutterLocalNotificationsPlugin();
 
   Future<void> requestNotificationPermission() async {
     NotificationSettings settings = await _messaging.requestPermission(
@@ -29,5 +30,17 @@ class NotificationServices {
     String?token= await _messaging.getToken();
     print(token);
     return token!;
+  }
+
+  void FirebaseInit()
+  {
+    FirebaseMessaging.onMessage.listen((message){
+      if(kDebugMode)
+        {
+          print(message.notification!.title);
+          print(message.notification!.body);
+        }
+
+    });
   }
 }
