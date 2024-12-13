@@ -104,28 +104,33 @@ class CommonIssues extends StackedView<CommonIssuesViewModel> {
                 ),
               ),
             ),
-            viewModel.isLoading ? SliverToBoxAdapter(child: Center(
-              child: Container(
-                  height: 30,
-                  width: 30,
-                  child: CircularProgressIndicator(
-                    color: ThemeService.primaryColor,
-                  )),
-            ),) : SliverList.builder(
-              itemCount: viewModel.issues.length,
-              itemBuilder: (context, index) {
-                final trend = viewModel.issues[index];
-                return IssueTile(issueItem: trend);
-              },
-            ),
+            viewModel.isLoading
+                ? SliverToBoxAdapter(
+                    child: Center(
+                      child: Container(
+                          height: 30,
+                          width: 30,
+                          child: CircularProgressIndicator(
+                            color: ThemeService.primaryColor,
+                          )),
+                    ),
+                  )
+                : SliverList.builder(
+                    itemCount: viewModel.issues.length,
+                    itemBuilder: (context, index) {
+                      final trend = viewModel.issues[index];
+                      return IssueTile(issueItem: trend,viewModel: viewModel,);
+                    },
+                  ),
           ],
         ));
   }
 }
 
 class IssueTile extends StatefulWidget {
-  const IssueTile({super.key, required this.issueItem});
+  const IssueTile({super.key, required this.issueItem,required this.viewModel});
 
+  final CommonIssuesViewModel viewModel;
   final Issue issueItem;
 
   @override
@@ -139,7 +144,7 @@ class _IssueTileState extends State<IssueTile> {
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 9),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,46 +174,94 @@ class _IssueTileState extends State<IssueTile> {
               SizedBox(
                 height: 1,
               ),
-              Row(
-                children: [
-                  Text(
-                    '${widget.issueItem.upvotes} upvotes',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400),
-                  ),
-                  Text(
-                    ' ${widget.issueItem.downvotes} downvotes',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              )
+              // Row(
+              //   children: [
+              //     Text(
+              //       '${widget.issueItem.upvotes} upvotes',
+              //       style: TextStyle(
+              //           color: Colors.black,
+              //           fontSize: 16,
+              //           fontWeight: FontWeight.w400),
+              //     ),
+              //     Text(
+              //       ' ${widget.issueItem.downvotes} downvotes',
+              //       style: TextStyle(
+              //         color: Colors.black,
+              //         fontSize: 16,
+              //         fontWeight: FontWeight.w400,
+              //       ),
+              //     ),
+              //   ],
+              // )
             ],
           ),
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Icon(
-                    Icons.thumb_up_off_alt,
-                    color: ThemeService.primaryColor,
-                    size: 25,
+                  Column(
+                    children: <Widget>[
+                      IconButton(
+                        onPressed: () {
+                          widget.viewModel.upVoteHandle(widget.issueItem.uid);
+                        },
+                        icon: Icon(
+                          Icons.thumb_up_off_alt,
+                          color: ThemeService.primaryColor,
+                          size: 25,
+                        ),
+                      ),
+                      Text(
+                        // '${widget.issueItem.upvotes}K',
+                        formatNumber(widget.issueItem.upvotes),
+                        style: TextStyle(
+                            color: Colors.black.withOpacity(0.6),
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Icon(
-                    Icons.thumb_down_off_alt_rounded,
-                    color: Colors.red,
-                    size: 25,
+                  // SizedBox(
+                  //   width: 5,
+                  // ),
+                  Column(
+                    children: <Widget>[
+                      IconButton(
+                          onPressed: (){
+                            widget.viewModel.downVoteHandle(widget.issueItem.uid);
+                          },
+                          icon: Icon(
+                            Icons.thumb_down_off_alt_rounded,
+                            color: Colors.red,
+                            size: 24,
+                          ),
+                      ),
+
+                      Text(
+                        formatNumber(widget.issueItem.downvotes),
+                        style: TextStyle(
+                          color: Colors.black.withOpacity(0.6),
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   )
+                  // Icon(
+                  //   Icons.thumb_up_off_alt,
+                  //   color: ThemeService.primaryColor,
+                  //   size: 25,
+                  // ),
+                  // SizedBox(
+                  //   width: 10,
+                  // ),
+                  // Icon(
+                  //   Icons.thumb_down_off_alt_rounded,
+                  //   color: Colors.red,
+                  //   size: 25,
+                  // )
                 ],
               )
             ],
@@ -216,5 +269,15 @@ class _IssueTileState extends State<IssueTile> {
         ],
       ),
     );
+  }
+
+  String formatNumber(int number) {
+    if (number >= 1000000) {
+      return '${(number / 1000000).toStringAsFixed(1)}M';
+    } else if (number >= 1000) {
+      return '${(number / 1000).toStringAsFixed(1)}K';
+    } else {
+      return '$number';
+    }
   }
 }

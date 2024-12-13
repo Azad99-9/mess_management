@@ -23,8 +23,34 @@ class CommonIssuesViewModel extends BaseViewModel {
     isLoading = false;
     notifyListeners();
     // Use the list of issues as needed
-    print(issues); // Example: Print all issues
+    // print(issues); // Example: Print all issues
   }
 
+  void upVoteHandle(String issueId) async
+  {
+    try{
+      final issue=await DBService.issues.doc(issueId);
+      await issue.update({
+        'upvotes':FieldValue.increment(1),
+      });
+      
+    }catch(error)
+    {
+      print("failed to upvotes $error");
+    }
+  }
+  void downVoteHandle(String issueId) async
+  {
+    try{
+      final issue=await DBService.issues.doc(issueId);
+      await issue.update({
+        'upvotes':FieldValue.increment(-1),
+      });
+
+    }catch(error)
+    {
+      print("failed to upvotes $error");
+    }
+  }
 
 }
