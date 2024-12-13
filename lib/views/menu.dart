@@ -68,6 +68,7 @@ class MessMenuPage extends StackedView<MenuViewModel> {
           backgroundColor: ThemeService.primaryColor,
         ),
         body: Container(),
+      bottomNavigationBar: Container(),
       //   body: viewModel.isLoading
       //       ? Center(
       //     child: Container(
@@ -189,5 +190,6 @@ class MessMenuPage extends StackedView<MenuViewModel> {
       //   ),
       ),
     );
+
   }
 }
