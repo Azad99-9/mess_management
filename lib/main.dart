@@ -2,9 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:mess_management/constants/routes.dart';
 import 'package:mess_management/firebase_options.dart';
 import 'package:mess_management/router.dart';
+import 'package:mess_management/services/hive_service.dart';
 import 'package:mess_management/services/theme_service.dart';
 import 'package:mess_management/views/common_issues.dart';
 import 'package:mess_management/views/complaints.dart';
@@ -12,6 +14,7 @@ import 'package:mess_management/views/menu.dart';
 import 'package:mess_management/views/profile_page.dart';
 import 'package:mess_management/locator.dart';
 import 'package:mess_management/views/feedback_page.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +23,12 @@ void main() async {
   );
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   setUpLocator();
+  final appDocumentDir = await getApplicationDocumentsDirectory();
+
+  // Initialize Hive with the directory path
+  Hive.init(appDocumentDir.path);
+
+  HiveService.menuCacheBox = await HiveService().openBox(HiveService.menuCache);
   runApp(const MyApp());
   notificationService.requestNotificationPermission();
   notificationService.getToken();
