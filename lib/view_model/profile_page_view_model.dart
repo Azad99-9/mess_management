@@ -20,29 +20,28 @@ class ProfilePageViewModel extends BaseViewModel{
    UserModel?  get currentUser=>_currentUser;
    List<ComplaintModel> get complaints=>_complaints;
 
+   bool isLoading = false;
+
 
    ProfilePageViewModel() {
      _userService = locator<UserService>();
    }
    void fetchCurrentUser() async {
+     isLoading = true;
+     notifyListeners();
      try {
        setBusy(true);
-       final user = _userService.getUser;
-       print(user!.uid);
-       final userSnapShot = await DBService.users.doc(user!.uid).get();
-       if (userSnapShot.exists) {
-         final userDetails = UserModel.fromJson(userSnapShot.data() as Map<String, dynamic>);
-         _currentUser =userDetails;
-         notifyListeners();
-       } else {
-         print("User document does not exist.");
-       }
+       final UserModel user = await _userService.fetchUserDoc();
+       _currentUser = user;
+       print(User);
      } catch (error) {
        print("Error fetching user data: $error");
      }
      finally{
        setBusy(false);
      }
+     isLoading = false;
+     notifyListeners();
    }
    void fetchUserComplaints() async {
      try {

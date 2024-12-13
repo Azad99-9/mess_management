@@ -40,6 +40,31 @@ class UserService {
     }
   }
 
+  Future<UserModel> fetchUserDoc() async {
+    try {
+      // Get the current user's UID
+      final String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+      if (uid.isEmpty) {
+        throw Exception("User not logged in.");
+      }
+
+      // Reference to the Firestore `users` collection
+      final DocumentSnapshot<Map<String, dynamic>> docSnapshot =
+      await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+      if (!docSnapshot.exists) {
+        throw Exception("User document does not exist.");
+      }
+
+      final UserModel fetchedUser = UserModel.fromJson(docSnapshot.data()!);
+      print(fetchedUser.toString());
+      // Map the fetched document data to the `UserModel`
+      return fetchedUser;
+    } catch (e) {
+      throw Exception("Failed to fetch user document: $e");
+    }
+  }
   Future<void> logOut() async {
     await _googleSignIn.signOut();
     await _auth.signOut();

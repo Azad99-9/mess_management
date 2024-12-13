@@ -1,20 +1,20 @@
 class UserModel {
-  late final String uid;
-  late final String email;
-  late final String name;
-  late String phoneNumber;
-  late String gender;
-  late String mess;
-  late  String imageURL;
+  final String uid;
+  final String email;
+  final String? name;
+  String? phoneNumber;
+  String? gender;
+  String? mess;
+  String? imageURL;
 
   UserModel({
     required this.uid,
     required this.email,
     required this.name,
-    this.phoneNumber = '',
-    this.gender = '',
-    this.mess='',
-    this.imageURL=''
+    this.phoneNumber,
+    this.gender,
+    this.mess,
+    this.imageURL,
   });
 
   // From JSON method
@@ -22,10 +22,10 @@ class UserModel {
     return UserModel(
       uid: json['uid'] as String,
       email: json['email'] as String,
-      name: json['name']as String,
-      phoneNumber: json['phoneNumber'] ?? '',
+      name: json['name'] ?? 'user',
+      phoneNumber: json['phoneNumber'] ?? 'not provided',
       gender: json['gender'] ?? '',
-      mess: json['mess'] ?? '',
+      mess: json['mess'] ?? 'not assigned',
       imageURL: json['imageURL'] ?? '',
     );
   }
@@ -35,11 +35,17 @@ class UserModel {
     return {
       'uid': uid,
       'email': email,
-      'name':name,
+      'name': name,
       'phoneNumber': phoneNumber,
       'gender': gender,
-      'mess':mess,
-      'imageURL':imageURL,
+      'mess': mess,
+      'imageURL': imageURL,
     };
   }
+
+  @override
+  String toString() {
+    return 'UserModel(uid: $uid, email: $email, name: $name, phoneNumber: $phoneNumber, gender: $gender, mess: $mess, imageURL: $imageURL)';
+  }
+
 }

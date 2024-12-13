@@ -158,17 +158,14 @@ class _MainScreenState extends State<MainScreen> {
                     Icon(
                       Icons.feedback_outlined,
                       size: 35,
-                      color: ThemeService.primaryColor,
+                      color: Colors.blue,
                     ),
                     SizedBox(
                       width: 8,
                     ),
                     Text(
                       'Feedback',
-                      style: TextStyle(
-                          color: Colors.black.withOpacity(0.6),
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -189,17 +186,14 @@ class _MainScreenState extends State<MainScreen> {
                     Icon(
                       Icons.report_gmailerrorred,
                       size: 35,
-                      color: ThemeService.primaryColor,
+                      color: Colors.blue,
                     ),
                     SizedBox(
                       width: 8,
                     ),
                     Text(
                       'Complaints',
-                      style: TextStyle(
-                          color: Colors.black.withOpacity(0.6),
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),

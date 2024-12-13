@@ -5,6 +5,7 @@ class MenuModel {
   MenuModel({required this.success, required this.data});
 
   factory MenuModel.fromJson(Map<String, dynamic> json) {
+    print(json['data'] as Map<String, dynamic>);
     return MenuModel(
       success: json['success'],
       data: (json['data'] as Map<String, dynamic>).map(
@@ -64,22 +65,22 @@ class DayData {
 class MealItem {
   final String itemName;
   final String quantityServed;
-  final int grams;
-  final int calories;
+  final String? grams;
+  final String? calories;
 
   MealItem({
     required this.itemName,
     required this.quantityServed,
-    required this.grams,
-    required this.calories,
+    this.grams,
+    this.calories,
   });
 
   factory MealItem.fromJson(Map<String, dynamic> json) {
     return MealItem(
-      itemName: json['itemName'],
-      quantityServed: json['quantityServed'],
-      grams: json['grams'],
-      calories: json['calories'],
+      itemName: json['itemName'] ?? '',
+      quantityServed: json['quantityServed'] ?? '',
+      grams: json['grams'] ?? '',
+      calories: json['calories'] ?? '',
     );
   }
 
