@@ -6,6 +6,9 @@ class UserModel {
   String? gender;
   String? mess;
   String? imageURL;
+  List<String>?upvotes;
+  List<String>?downvotes;
+  final String FCS_TOKEN ;
 
   UserModel({
     required this.uid,
@@ -15,6 +18,9 @@ class UserModel {
     this.gender,
     this.mess,
     this.imageURL,
+    this.upvotes,
+    this.downvotes,
+    required this.FCS_TOKEN,
   });
 
   // From JSON method
@@ -27,6 +33,9 @@ class UserModel {
       gender: json['gender'] ?? '',
       mess: json['mess'] ?? 'not assigned',
       imageURL: json['imageURL'] ?? '',
+      upvotes:List<String>.from(json['upvotes'] ?? []),
+        downvotes:List<String>.from(json['downvotes'] ?? []),
+      FCS_TOKEN: json['FCS_TOKEN'] as String,
     );
   }
 
@@ -40,12 +49,14 @@ class UserModel {
       'gender': gender,
       'mess': mess,
       'imageURL': imageURL,
+      'upvotes':upvotes,
+      'downvotes':downvotes,
+      'FCS_TOKEN':FCS_TOKEN
     };
   }
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, email: $email, name: $name, phoneNumber: $phoneNumber, gender: $gender, mess: $mess, imageURL: $imageURL)';
+    return 'UserModel(uid: $uid, email: $email, name: $name, phoneNumber: $phoneNumber, gender: $gender, mess: $mess, imageURL: $imageURL,upvotes:$upvotes,downvotes:$downvotes,FCS_TOKEN:$FCS_TOKEN)';
   }
-
 }

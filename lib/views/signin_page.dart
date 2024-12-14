@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mess_management/constants/routes.dart';
 import 'package:mess_management/locator.dart';
+import 'package:mess_management/services/notification_services.dart';
 import 'package:mess_management/services/theme_service.dart';
 import 'package:mess_management/services/size_config.dart';
 import 'package:mess_management/services/user_service.dart';
@@ -74,6 +75,11 @@ class _SigninPageState extends State<SigninPage> {
                   if (!snapshot.exists) {
                     navigationService.pushScreen(Routes.signUp, arguments: userData);
                   } else {
+                    final FCS_TOKEN=await NotificationServices().getToken();
+                    print("in sign in page $FCS_TOKEN");
+                    await docRef.update({
+                      'FCS_TOKEN':FCS_TOKEN
+                    });
                     navigationService.pushScreen(Routes.menu);
                   }
                 }

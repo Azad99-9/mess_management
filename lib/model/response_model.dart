@@ -12,6 +12,7 @@ class ResponseModel {
   late final double serving;
   late final double washArea;
   late final String uid;
+  late final String mess;
 
   // Constructor
   ResponseModel(
@@ -27,6 +28,7 @@ class ResponseModel {
         required this.attire,
         required this.serving,
         required this.washArea,
+        required this.mess,
         required this.uid});
 
   // From JSON method
@@ -44,6 +46,7 @@ class ResponseModel {
         attire: (json['attire'] as num).toDouble(),
         serving: (json['serving'] as num).toDouble(),
         washArea: (json['washArea'] as num).toDouble(),
+        mess: (json['mess'])as String,
         uid: json['uid'] as String);
   }
 
@@ -62,6 +65,7 @@ class ResponseModel {
       'attire': attire,
       'serving': serving,
       'washArea': washArea,
+      'mess':mess,
       'uid': uid,
     };
   }

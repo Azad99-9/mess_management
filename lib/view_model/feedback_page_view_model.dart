@@ -18,9 +18,14 @@ class FeedbackPageViewModel extends ChangeNotifier {
       TextEditingController(text: "10-10-2024");
   TextEditingController endDateController =
       TextEditingController(text: "11-11-2024");
+  String?selectedMess;
+  List<String> messes = ['Mess I', 'Mess II', 'Mess III', 'Mess IV'];
 
   final formKey = GlobalKey<FormState>();
-
+  void updateSelected(value) {
+    selectedMess = value!;
+    notifyListeners();
+  }
   void submit() async {
     final exists = await DBService.feedbackResponses
         .where('uid', isEqualTo: UserService.currentUser!.uid)
@@ -30,6 +35,7 @@ class FeedbackPageViewModel extends ChangeNotifier {
     if (exists.docs.isEmpty) {
       await DBService.feedbackResponses.add(
         ResponseModel(
+          mess:selectedMess??'',
           startDate: startDateController.text,
           endDate: endDateController.text,
           timeliness: double.parse(timeliness.text ?? '0'),
