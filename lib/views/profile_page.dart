@@ -16,7 +16,6 @@ class ProfilePage extends StackedView<ProfilePageViewModel> {
   @override
   void onViewModelReady(ProfilePageViewModel viewModel) {
     viewModel.fetchCurrentUser();
-    viewModel.fetchUserComplaints();
   }
 
   @override
@@ -132,6 +131,23 @@ class ProfilePage extends StackedView<ProfilePageViewModel> {
           _buildListTile(Icons.person_outline, 'Gender',
               user?.gender ?? 'Not mentioned'),
           _buildListTile(Icons.restaurant, 'Mess', user?.mess ?? 'Not assigned'),
+          SizedBox(height: 20),
+          Text(
+                "Your Complaints",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+              ),
+          ),
+          ...viewModel.complaints.map((complaint) {
+            return _buildComplaint(
+              complaint.title,
+              complaint.mess,
+              complaint.description,
+              complaint.status,
+              complaint.uploadUrl,
+            );
+          }).toList(),
         ],
       ),
     );
@@ -145,6 +161,56 @@ class ProfilePage extends StackedView<ProfilePageViewModel> {
     );
   }
 
+  Widget _buildComplaint(String title, String mess, String description,String Status,String uploadURL) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      color: ThemeService.primaryAccent,
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Column(
+        children: [
+          if (uploadURL != null)
+            ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+              child: Image.network(
+                uploadURL,
+                height: 150,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Icon(
+                  Icons.broken_image,
+                  size: 100,
+                  color: ThemeService.primaryColor.withOpacity(0.5),
+                ),
+              ),
+            ),
+          ListTile(
+            leading: Icon(Icons.report, color:ThemeService.primaryColor),
+            title: Text(
+              title,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(
+              mess,
+              style: TextStyle(color: Colors.black.withOpacity(0.6)),
+            ),
+            trailing: Text(
+              Status,
+              style: TextStyle(color: Colors.black.withOpacity(0.6),
+              fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              description,
+              style: TextStyle(color: Colors.black.withOpacity(0.6)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   Widget _buildShimmerEffect() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -191,6 +257,8 @@ class ProfilePage extends StackedView<ProfilePageViewModel> {
               ),
             ),
           ),
+
+
         ],
       ),
     );
