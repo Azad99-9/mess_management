@@ -1,113 +1,4 @@
-// import 'dart:convert';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:http/http.dart' as http;
-// import 'package:mess_management/model/menu_model.dart';
-// import 'package:mess_management/services/db_service.dart';
-// import 'package:stacked/stacked.dart';
-//
-// class MenuViewModel extends BaseViewModel {
-//   MenuModel? _menuData;
-//   MenuModel? get menuData =>_menuData;
-//       // MenuModel? get menuData =>   MenuModel.fromJson({
-//   //   "success": true,
-//   //   "data": {
-//   //     "Sunday": {
-//   //       "breakFast": [
-//   //         {
-//   //           "itemName": "Milk",
-//   //           "quantityServed": "1 cup",
-//   //           "grams": "200",
-//   //           "calories": "150"
-//   //         }
-//   //       ],
-//   //       "lunch": [
-//   //         {
-//   //           "itemName": "Rice",
-//   //           "quantityServed": "3 bowls",
-//   //           "grams": "200",
-//   //           "calories": "180"
-//   //         }
-//   //       ],
-//   //       "snacks": [
-//   //         {
-//   //           "itemName": "Milk",
-//   //           "quantityServed": "1 cup",
-//   //           "grams": "200",
-//   //           "calories": "150"
-//   //         }
-//   //       ],
-//   //       "dinner": [
-//   //         {
-//   //           "itemName": "Rice",
-//   //           "quantityServed": "3 bowls",
-//   //           "grams": "200",
-//   //           "calories": "180"
-//   //         },
-//   //         {
-//   //           "itemName": "Sambar",
-//   //           "quantityServed": "2 bowls",
-//   //           "grams": "250",
-//   //           "calories": "100"
-//   //         }
-//   //       ]
-//   //     }
-//   //   }
-//   // });
-//
-//
-//   List<String> days = [
-//     'Monday',
-//   ];
-//
-//
-//   bool isLoading = false;
-//
-//   Future<void> fetchMenu() async {
-//     if (_menuData != null) return;
-//     isLoading = true;
-//
-//     final snapshot = await DBService.constants.get();
-//     final docs = snapshot.docs;
-//
-//     try {
-//       final response = await http.get(
-//         Uri.parse('https://us-central1-mess-management-250df.cloudfunctions.net/getAllMenu'),
-//       );
-//       if (response.statusCode == 200) {
-//         final jsonData = json.decode(response.body);
-//         _menuData = MenuModel.fromJson(jsonData);
-//       } else {
-//         throw Exception('Failed to load menu. Status code: ${response.statusCode}');
-//       }
-//     } catch (error) {
-//       throw Exception('An error occurred while fetching the menu: $error');
-//     } finally {
-//       notifyListeners();
-//     }
-//     isLoading = false;
-//   //   notifyListeners();
-//   //
-//     notifyListeners();
-//   }
-// // Determines the current meal type based on the time
-//   String getCurrentMealType(DateTime currentTime) {
-//     final hour = currentTime.hour;
-//
-//     if (hour >= 4 && hour < 12) {
-//       return 'Breakfast';
-//     } else if (hour >= 12 && hour < 16) {
-//       return 'Lunch';
-//     } else if (hour >= 16 && hour < 19) {
-//       return 'Snacks';
-//     } else {
-//       return 'Dinner';
-//     }
-//   }
-// }
-import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hive/hive.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:mess_management/model/menu_model.dart';
 import 'package:mess_management/services/db_service.dart';
 import 'package:mess_management/services/hive_service.dart';
@@ -138,194 +29,198 @@ class MenuViewModel extends BaseViewModel {
     isLoading = true;
     notifyListeners();
 
-    try {
-      // final response = await http.get(
-      //   Uri.parse(
-      //       'https://us-central1-mess-management-250df.cloudfunctions.net/getAllMenu'),
-      // );
-      //
-      // print("Response Status: ${response.statusCode}");
-      // print("Response Body: ${response.body}");
 
-      // if (response.statusCode == 200) {
-      //   final jsonData = json.decode(response.body);
-      //
-      //   print("Fetched menu data: $_menuData");
-      // } else {
-      //   throw Exception(
-      //       'Failed to load menu. Status code: ${response.statusCode}');
-      // }
-      _menuData=MenuModel.fromJson({
-        "success": true,
-        "data": {
-          "Monday": {
-            "breakFast": [
-              {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
-            ],
-            "lunch": [
-              {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"}
-            ],
-            "snacks": [
-              {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
-            ],
-            "dinner": [
-              {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"},
-              {"itemName": "Sambar", "quantityServed": "2 bowls", "grams": "250", "calories": "100"}
-            ]
-          },
-          "Tuesday": {
-            "breakFast": [
-              {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
-            ],
-            "lunch": [
-              {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"}
-            ],
-            "snacks": [
-              {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
-            ],
-            "dinner": [
-              {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"},
-              {"itemName": "Sambar", "quantityServed": "2 bowls", "grams": "250", "calories": "100"}
-            ]
-          },
-          "Wednesday": {
-            "breakFast": [
-              {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
-            ],
-            "lunch": [
-              {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"}
-            ],
-            "snacks": [
-              {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
-            ],
-            "dinner": [
-              {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"},
-              {"itemName": "Sambar", "quantityServed": "2 bowls", "grams": "250", "calories": "100"}
-            ]
-          },
-          "Thursday": {
-            "breakFast": [
-              {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
-            ],
-            "lunch": [
-              {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"}
-            ],
-            "snacks": [
-              {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
-            ],
-            "dinner": [
-              {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"},
-              {"itemName": "Sambar", "quantityServed": "2 bowls", "grams": "250", "calories": "100"}
-            ]
-          },
-          "Friday": {
-            "breakFast": [
-              {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
-            ],
-            "lunch": [
-              {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"}
-            ],
-            "snacks": [
-              {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
-            ],
-            "dinner": [
-              {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"},
-              {"itemName": "Sambar", "quantityServed": "2 bowls", "grams": "250", "calories": "100"}
-            ]
-          },
-          "Saturday": {
-            "breakFast": [
-              {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
-            ],
-            "lunch": [
-              {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"}
-            ],
-            "snacks": [
-              {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
-            ],
-            "dinner": [
-              {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"},
-              {"itemName": "Sambar", "quantityServed": "2 bowls", "grams": "250", "calories": "100"}
-            ]
-          },
-          "Sunday": {
-            "breakFast": [
-              {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
-            ],
-            "lunch": [
-              {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"}
-            ],
-            "snacks": [
-              {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
-            ],
-            "dinner": [
-              {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"},
-              {"itemName": "Sambar", "quantityServed": "2 bowls", "grams": "250", "calories": "100"}
-            ]
-          },
+    _menuData = MenuModel.fromJson({
+      "success": true,
+      "data": {
+        "Monday": {
+          "breakFast": [
+            {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"},
+            {"itemName": "Bread", "quantityServed": "2 slices", "grams": "50", "calories": "130"},
+            {"itemName": "Butter", "quantityServed": "10g", "grams": "10", "calories": "70"},
+            {"itemName": "Banana", "quantityServed": "1 piece", "grams": "120", "calories": "105"}
+          ],
+          "lunch": [
+            {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"},
+            {"itemName": "Dal", "quantityServed": "1 bowl", "grams": "150", "calories": "100"},
+            {"itemName": "Vegetable Curry", "quantityServed": "1 bowl", "grams": "150", "calories": "120"},
+            {"itemName": "Curd", "quantityServed": "1 bowl", "grams": "100", "calories": "60"}
+          ],
+          "snacks": [
+            {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"},
+            {"itemName": "Biscuits", "quantityServed": "4 pieces", "grams": "50", "calories": "200"},
+            {"itemName": "Fruits", "quantityServed": "1 bowl", "grams": "150", "calories": "90"},
+            {"itemName": "Tea", "quantityServed": "1 cup", "grams": "150", "calories": "50"}
+          ],
+          "dinner": [
+            {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"},
+            {"itemName": "Sambar", "quantityServed": "2 bowls", "grams": "250", "calories": "100"},
+            {"itemName": "Chapati", "quantityServed": "2 pieces", "grams": "100", "calories": "200"},
+            {"itemName": "Paneer Curry", "quantityServed": "1 bowl", "grams": "150", "calories": "150"}
+          ]
         },
-      });
-    //
-    final snapshot = await DBService.constants.get();
-    final docs = snapshot.docs;
-
-    final int remoteMatcher =
-        (docs.first.data() as Map<String, dynamic>)['value'];
-
-    int? localMatchcer =
-        (await HiveService().get(HiveService.menuCacheBox, prevMatcher)) as int?;
-
-    localMatchcer ??= 0;
-
-    // await HiveService()
-    //     .put(HiveService.menuCacheBox, prevMatcher, 0);
-
-    Map<String, dynamic> jsonData = {};
-    if (remoteMatcher > localMatchcer) {
-      try {
-        final response = await http.get(
-          Uri.parse(
-              'https://us-central1-mess-management-250df.cloudfunctions.net/getAllMenu'),
-        );
-        print("hitted");
-        if (response.statusCode == 200) {
-          jsonData = json.decode(response.body) as Map<String, dynamic>;
-          await HiveService()
-              .put(HiveService.menuCacheBox, cachedMenu, jsonData);
-          localMatchcer = remoteMatcher;
-          print('json');
-          await HiveService()
-              .put(HiveService.menuCacheBox, prevMatcher, localMatchcer);
-          print('kicak');
-
-        } else {
-          throw Exception(
-              'Failed to load menu. Status code: ${response.statusCode}');
+        "Tuesday": {
+          "breakFast": [
+            {"itemName": "Oats", "quantityServed": "1 bowl", "grams": "200", "calories": "120"},
+            {"itemName": "Apple", "quantityServed": "1 piece", "grams": "180", "calories": "95"},
+            {"itemName": "Boiled Egg", "quantityServed": "2 pieces", "grams": "100", "calories": "140"},
+            {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
+          ],
+          "lunch": [
+            {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"},
+            {"itemName": "Chicken Curry", "quantityServed": "1 bowl", "grams": "200", "calories": "220"},
+            {"itemName": "Green Salad", "quantityServed": "1 bowl", "grams": "150", "calories": "50"},
+            {"itemName": "Curd", "quantityServed": "1 bowl", "grams": "100", "calories": "60"}
+          ],
+          "snacks": [
+            {"itemName": "Tea", "quantityServed": "1 cup", "grams": "150", "calories": "50"},
+            {"itemName": "Samosa", "quantityServed": "2 pieces", "grams": "120", "calories": "250"},
+            {"itemName": "Banana", "quantityServed": "1 piece", "grams": "120", "calories": "105"},
+            {"itemName": "Cookies", "quantityServed": "4 pieces", "grams": "80", "calories": "200"}
+          ],
+          "dinner": [
+            {"itemName": "Rice", "quantityServed": "2 bowls", "grams": "200", "calories": "180"},
+            {"itemName": "Roti", "quantityServed": "2 pieces", "grams": "100", "calories": "150"},
+            {"itemName": "Mixed Veg Curry", "quantityServed": "1 bowl", "grams": "200", "calories": "150"},
+            {"itemName": "Soup", "quantityServed": "1 bowl", "grams": "250", "calories": "80"}
+          ]
+        },
+        "Wednesday": {
+          "breakFast": [
+            {"itemName": "Paratha", "quantityServed": "2 pieces", "grams": "150", "calories": "220"},
+            {"itemName": "Yogurt", "quantityServed": "1 bowl", "grams": "150", "calories": "90"},
+            {"itemName": "Orange", "quantityServed": "1 piece", "grams": "150", "calories": "60"},
+            {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
+          ],
+          "lunch": [
+            {"itemName": "Pulao", "quantityServed": "1 bowl", "grams": "250", "calories": "210"},
+            {"itemName": "Paneer Curry", "quantityServed": "1 bowl", "grams": "150", "calories": "150"},
+            {"itemName": "Salad", "quantityServed": "1 bowl", "grams": "150", "calories": "50"},
+            {"itemName": "Dal", "quantityServed": "1 bowl", "grams": "150", "calories": "100"}
+          ],
+          "snacks": [
+            {"itemName": "Coffee", "quantityServed": "1 cup", "grams": "150", "calories": "50"},
+            {"itemName": "Sandwich", "quantityServed": "1 piece", "grams": "150", "calories": "200"},
+            {"itemName": "Fruits", "quantityServed": "1 bowl", "grams": "150", "calories": "90"},
+            {"itemName": "Nuts", "quantityServed": "30g", "grams": "30", "calories": "200"}
+          ],
+          "dinner": [
+            {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"},
+            {"itemName": "Chicken Curry", "quantityServed": "1 bowl", "grams": "200", "calories": "220"},
+            {"itemName": "Soup", "quantityServed": "1 bowl", "grams": "250", "calories": "80"},
+            {"itemName": "Roti", "quantityServed": "2 pieces", "grams": "100", "calories": "150"}
+          ]
+        },
+        "Thursday": {
+          "breakFast": [
+            {"itemName": "Idli", "quantityServed": "3 pieces", "grams": "150", "calories": "120"},
+            {"itemName": "Sambar", "quantityServed": "1 bowl", "grams": "200", "calories": "100"},
+            {"itemName": "Chutney", "quantityServed": "1 bowl", "grams": "50", "calories": "50"},
+            {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
+          ],
+          "lunch": [
+            {"itemName": "Vegetable Biryani", "quantityServed": "1 bowl", "grams": "250", "calories": "200"},
+            {"itemName": "Raita", "quantityServed": "1 bowl", "grams": "100", "calories": "50"},
+            {"itemName": "Dal", "quantityServed": "1 bowl", "grams": "150", "calories": "100"},
+            {"itemName": "Salad", "quantityServed": "1 bowl", "grams": "150", "calories": "50"}
+          ],
+          "snacks": [
+            {"itemName": "Tea", "quantityServed": "1 cup", "grams": "150", "calories": "50"},
+            {"itemName": "Cutlets", "quantityServed": "2 pieces", "grams": "120", "calories": "250"},
+            {"itemName": "Banana", "quantityServed": "1 piece", "grams": "120", "calories": "105"},
+            {"itemName": "Cookies", "quantityServed": "4 pieces", "grams": "80", "calories": "200"}
+          ],
+          "dinner": [
+            {"itemName": "Rice", "quantityServed": "2 bowls", "grams": "200", "calories": "180"},
+            {"itemName": "Fish Curry", "quantityServed": "1 bowl", "grams": "200", "calories": "220"},
+            {"itemName": "Roti", "quantityServed": "2 pieces", "grams": "100", "calories": "150"},
+            {"itemName": "Soup", "quantityServed": "1 bowl", "grams": "250", "calories": "80"}
+          ]
+        },
+        "Friday": {
+          "breakFast": [
+            {"itemName": "Poha", "quantityServed": "1 bowl", "grams": "150", "calories": "150"},
+            {"itemName": "Tea", "quantityServed": "1 cup", "grams": "150", "calories": "50"},
+            {"itemName": "Boiled Egg", "quantityServed": "2 pieces", "grams": "100", "calories": "140"},
+            {"itemName": "Apple", "quantityServed": "1 piece", "grams": "180", "calories": "95"}
+          ],
+          "lunch": [
+            {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"},
+            {"itemName": "Paneer Butter Masala", "quantityServed": "1 bowl", "grams": "200", "calories": "250"},
+            {"itemName": "Dal", "quantityServed": "1 bowl", "grams": "150", "calories": "100"},
+            {"itemName": "Curd", "quantityServed": "1 bowl", "grams": "100", "calories": "60"}
+          ],
+          "snacks": [
+            {"itemName": "Coffee", "quantityServed": "1 cup", "grams": "150", "calories": "50"},
+            {"itemName": "Veg Puff", "quantityServed": "1 piece", "grams": "150", "calories": "220"},
+            {"itemName": "Fruits", "quantityServed": "1 bowl", "grams": "150", "calories": "90"},
+            {"itemName": "Nuts", "quantityServed": "30g", "grams": "30", "calories": "200"}
+          ],
+          "dinner": [
+            {"itemName": "Rice", "quantityServed": "3 bowls", "grams": "200", "calories": "180"},
+            {"itemName": "Mutton Curry", "quantityServed": "1 bowl", "grams": "200", "calories": "280"},
+            {"itemName": "Roti", "quantityServed": "2 pieces", "grams": "100", "calories": "150"},
+            {"itemName": "Mixed Veg Curry", "quantityServed": "1 bowl", "grams": "200", "calories": "150"}
+          ]
+        },
+        "Saturday": {
+          "breakFast": [
+            {"itemName": "Upma", "quantityServed": "1 bowl", "grams": "200", "calories": "180"},
+            {"itemName": "Coconut Chutney", "quantityServed": "1 bowl", "grams": "50", "calories": "50"},
+            {"itemName": "Orange Juice", "quantityServed": "1 glass", "grams": "250", "calories": "110"},
+            {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
+          ],
+          "lunch": [
+            {"itemName": "Fried Rice", "quantityServed": "1 bowl", "grams": "250", "calories": "220"},
+            {"itemName": "Chicken Curry", "quantityServed": "1 bowl", "grams": "200", "calories": "220"},
+            {"itemName": "Salad", "quantityServed": "1 bowl", "grams": "150", "calories": "50"},
+            {"itemName": "Dal", "quantityServed": "1 bowl", "grams": "150", "calories": "100"}
+          ],
+          "snacks": [
+            {"itemName": "Tea", "quantityServed": "1 cup", "grams": "150", "calories": "50"},
+            {"itemName": "Pakora", "quantityServed": "8 pieces", "grams": "150", "calories": "250"},
+            {"itemName": "Banana", "quantityServed": "1 piece", "grams": "120", "calories": "105"},
+            {"itemName": "Biscuits", "quantityServed": "4 pieces", "grams": "50", "calories": "200"}
+          ],
+          "dinner": [
+            {"itemName": "Rice", "quantityServed": "2 bowls", "grams": "200", "calories": "180"},
+            {"itemName": "Paneer Tikka Masala", "quantityServed": "1 bowl", "grams": "200", "calories": "250"},
+            {"itemName": "Roti", "quantityServed": "2 pieces", "grams": "100", "calories": "150"},
+            {"itemName": "Soup", "quantityServed": "1 bowl", "grams": "250", "calories": "80"}
+          ]
+        },
+        "Sunday": {
+          "breakFast": [
+            {"itemName": "Dosa", "quantityServed": "2 pieces", "grams": "200", "calories": "180"},
+            {"itemName": "Sambar", "quantityServed": "1 bowl", "grams": "200", "calories": "100"},
+            {"itemName": "Coconut Chutney", "quantityServed": "1 bowl", "grams": "50", "calories": "50"},
+            {"itemName": "Milk", "quantityServed": "1 cup", "grams": "200", "calories": "150"}
+          ],
+          "lunch": [
+            {"itemName": "Biriyani", "quantityServed": "1 bowl", "grams": "250", "calories": "300"},
+            {"itemName": "Raita", "quantityServed": "1 bowl", "grams": "100", "calories": "50"},
+            {"itemName": "Chicken Curry", "quantityServed": "1 bowl", "grams": "200", "calories": "220"},
+            {"itemName": "Salad", "quantityServed": "1 bowl", "grams": "150", "calories": "50"}
+          ],
+          "snacks": [
+            {"itemName": "Coffee", "quantityServed": "1 cup", "grams": "150", "calories": "50"},
+            {"itemName": "Veg Sandwich", "quantityServed": "1 piece", "grams": "150", "calories": "200"},
+            {"itemName": "Fruits", "quantityServed": "1 bowl", "grams": "150", "calories": "90"},
+            {"itemName": "Nuts", "quantityServed": "30g", "grams": "30", "calories": "200"}
+          ],
+          "dinner": [
+            {"itemName": "Rice", "quantityServed": "2 bowls", "grams": "200", "calories": "180"},
+            {"itemName": "Mutton Curry", "quantityServed": "1 bowl", "grams": "200", "calories": "280"},
+            {"itemName": "Roti", "quantityServed": "2 pieces", "grams": "100", "calories": "150"},
+            {"itemName": "Mixed Veg Curry", "quantityServed": "1 bowl", "grams": "200", "calories": "150"}
+          ]
         }
-      } catch (error) {
-        throw Exception('An error occurred while fetching the menu: $error');
       }
-    } else {
-      final cachedData =
-      await HiveService().get(HiveService.menuCacheBox, cachedMenu);
-      if (cachedData != null) {
-        jsonData = Map<String, dynamic>.from(cachedData); // Safe conversion
-      }
-    }
-    print(jsonData);
+    });
 
-    _menuData = MenuModel.fromJson(jsonData);
 
     isLoading = false;
     notifyListeners();
-
-    } catch (error) {
-      print("Error occurred: $error");
-      throw Exception('An error occurred while fetching the menu: $error');
-    } finally {
-      isLoading = false;
-      notifyListeners();
-    }
   }
 
   // Determines the current meal type based on the time
@@ -343,6 +238,7 @@ class MenuViewModel extends BaseViewModel {
       return 'Dinner';
     }
   }
+
   String getDayOfWeek(DateTime dateTime) {
     switch (dateTime.weekday) {
       case 1:

@@ -1,29 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:mess_management/model/issue.dart';
 import 'package:mess_management/services/theme_service.dart';
 import 'package:mess_management/view_model/common_issues_view_model.dart';
 import 'package:stacked/stacked.dart';
 
-// class CommonIssues extends StatefulWidget {
-//   const CommonIssues({super.key});
-//
-//   @override
-//   State<CommonIssues> createState() => _CommonIssuesState();
-// }
-//
-// class _CommonIssuesState extends State<CommonIssues> {
-//   // Sample data to simulate trends
-//   final List<Map<String, dynamic>> trends = [
-//     {'rank': 1, 'title': '#FlutterDev', 'subtitle': '150K upvotes'},
-//     {'rank': 2, 'title': '#OpenAI', 'subtitle': '90K upvotes'},
-//     {'rank': 3, 'title': 'AI Revolution', 'subtitle': '75K upvotes'},
-//     {'rank': 4, 'title': '#TechTrends', 'subtitle': '60K upvotes'},
-//     {'rank': 5, 'title': 'Startup Growth', 'subtitle': '45K upvotes'},
-//   ];
-//
-//
-// }
+import 'package:flutter/material.dart';
+import 'package:mess_management/model/issue.dart';
+import 'package:mess_management/services/theme_service.dart';
+import 'package:mess_management/view_model/common_issues_view_model.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:stacked/stacked.dart';
 
 class CommonIssues extends StackedView<CommonIssuesViewModel> {
   @override
@@ -34,99 +22,244 @@ class CommonIssues extends StackedView<CommonIssuesViewModel> {
   Widget builder(
       BuildContext context, CommonIssuesViewModel viewModel, Widget? child) {
     return Scaffold(
-        backgroundColor: ThemeService.primaryAccent,
-        body: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.only(bottom: 14),
-                child: Container(
-                  color: ThemeService.primaryColor,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(0, 36, 16, 14),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  Scaffold.of(context).openDrawer();
-                                },
-                                icon: Icon(
-                                  Icons.menu,
-                                  color: ThemeService.secondaryColor,
-                                )),
-                          ],
+      backgroundColor: ThemeService.primaryAccent,
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 14),
+              child: Container(
+                color: ThemeService.primaryColor,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 36, 16, 14),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                        icon: Icon(
+                          Icons.menu,
+                          color: ThemeService.secondaryColor,
                         ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 16,
+                      ),
+                      SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Trending issues',
+                            style: TextStyle(
+                              color: ThemeService.secondaryColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
                             ),
-                            const Text(
-                              'Trending issues',
+                          ),
+                          SizedBox(height: 4),
+                          RichText(
+                            text: TextSpan(
+                              text: 'Upvote ',
                               style: TextStyle(
-                                color: ThemeService.secondaryColor,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 22,
+                                fontSize: 14,
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: 4,
-                              ),
-                              child: RichText(
-                                text: TextSpan(
-                                  text: 'Upvote ',
+                              children: [
+                                TextSpan(
+                                  text: 'for Immediate resolution',
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14),
-                                  children: [
-                                    TextSpan(
-                                        text: ' for Immediate resolution',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            letterSpacing: 1,
-                                            fontSize: 12)),
-                                  ],
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: 1,
+                                    fontSize: 12,
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-            viewModel.isLoading
-                ? SliverToBoxAdapter(
-                    child: Center(
-                      child: Container(
-                          height: 30,
-                          width: 30,
-                          child: CircularProgressIndicator(
-                            color: ThemeService.primaryColor,
-                          )),
+          ),
+          viewModel.isLoading
+              ? _buildShimmerList()
+              : SliverList.builder(
+                  itemCount: viewModel.issues.length,
+                  itemBuilder: (context, index) {
+                    final trend = viewModel.issues[index];
+                    return IssueTile(
+                      issueItem: trend,
+                      viewModel: viewModel,
+                    );
+                  },
+                ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildShimmerList() {
+    return SliverToBoxAdapter(
+      child: Column(
+        children: List.generate(10, (index) => IssueTileShimmer()),
+      ),
+    );
+  }
+
+  Widget _buildShimmerTile() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            children: [
+              Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(25),
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 10,
+                      width: double.infinity,
+                      color: Colors.grey[300],
                     ),
-                  )
-                : SliverList.builder(
-                    itemCount: viewModel.issues.length,
-                    itemBuilder: (context, index) {
-                      final trend = viewModel.issues[index];
-                      return IssueTile(
-                        issueItem: trend,
-                        viewModel: viewModel,
-                      );
-                    },
+                    SizedBox(height: 5),
+                    Container(
+                      height: 10,
+                      width: 150,
+                      color: Colors.grey[300],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class IssueTileShimmer extends StatelessWidget {
+  const IssueTileShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 9),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  width: 150,
+                  height: 16,
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(5)
                   ),
-          ],
-        ));
+                ),
+              ),
+              const SizedBox(height: 6),
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  width: 250,
+                  height: 20,
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(5)
+                  ),
+                ),
+              ),
+              const SizedBox(height: 6),
+            ],
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Column(
+                    children: <Widget>[
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Icon(Icons.thumb_up_alt_outlined,
+                            size: 25, color: Colors.grey),
+                      ),
+                      const SizedBox(height: 4),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          width: 30,
+                          height: 12,
+                          decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(5)
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 20),
+                  Column(
+                    children: <Widget>[
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Icon(Icons.thumb_down_alt_outlined,
+                            size: 25, color: Colors.grey),
+                      ),
+                      const SizedBox(height: 4),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          width: 30,
+                          height: 12,
+                          decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(5)
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
 
