@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mess_management/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:mess_management/constants/routes.dart';
 import 'package:mess_management/locator.dart';
 import 'package:mess_management/model/user_model.dart';
+import 'package:mess_management/services/notification_services.dart';
 
 class SigninDetailsViewModel extends ChangeNotifier {
   late final TextEditingController nameController;
@@ -28,6 +30,7 @@ class SigninDetailsViewModel extends ChangeNotifier {
     nameFocus.unfocus();
     emailFocus.unfocus();
     phoneFocus.unfocus();
+    final FCS_TOKEN=await NotificationServices().getToken();
     try {
       await userService.createNewUser(
         UserModel(
@@ -35,7 +38,9 @@ class SigninDetailsViewModel extends ChangeNotifier {
             name: nameController.text,
             email: emailController.text,
             phoneNumber: phoneController.text,
-            gender: genderController.text),
+            gender: genderController.text,
+            FCS_TOKEN: FCS_TOKEN,
+        ),
       );
       navigationService.pushScreen(Routes.menu);
     } catch (e) {

@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -6,6 +7,8 @@ import 'package:hive/hive.dart';
 import 'package:mess_management/constants/routes.dart';
 import 'package:mess_management/firebase_options.dart';
 import 'package:mess_management/router.dart';
+import 'package:mess_management/services/notification_services.dart';
+
 import 'package:mess_management/services/hive_service.dart';
 import 'package:mess_management/services/theme_service.dart';
 import 'package:mess_management/views/common_issues.dart';
@@ -14,9 +17,11 @@ import 'package:mess_management/views/menu.dart';
 import 'package:mess_management/views/profile_page.dart';
 import 'package:mess_management/locator.dart';
 import 'package:mess_management/views/feedback_page.dart';
+import 'package:firebase_analytics/observer.dart';
+
 import 'package:path_provider/path_provider.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -30,18 +35,16 @@ void main() async {
 
   HiveService.menuCacheBox = await HiveService().openBox(HiveService.menuCache);
   runApp(const MyApp());
-  notificationService.requestNotificationPermission();
-  notificationService.getToken();
-  notificationService.FirebaseInit();
+
 }
 @pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message)async {
+  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message)async {
   await Firebase.initializeApp();
+   NotificationServices().showNotification(message);
 
 }
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -90,6 +93,14 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  @override
+  void initState()
+  {
+    super.initState();
+    notificationService.requestNotificationPermission();
+    notificationService.getToken();
+    // notificationService.FirebaseInit(context);
+  }
   int _currentPage = 0;
 
   final PageController _pageController = PageController(initialPage: 0);

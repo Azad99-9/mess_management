@@ -119,7 +119,10 @@ class CommonIssues extends StackedView<CommonIssuesViewModel> {
                     itemCount: viewModel.issues.length,
                     itemBuilder: (context, index) {
                       final trend = viewModel.issues[index];
-                      return IssueTile(issueItem: trend,viewModel: viewModel,);
+                      return IssueTile(
+                        issueItem: trend,
+                        viewModel: viewModel,
+                      );
                     },
                   ),
           ],
@@ -128,7 +131,8 @@ class CommonIssues extends StackedView<CommonIssuesViewModel> {
 }
 
 class IssueTile extends StatefulWidget {
-  const IssueTile({super.key, required this.issueItem,required this.viewModel});
+  const IssueTile(
+      {super.key, required this.issueItem, required this.viewModel});
 
   final CommonIssuesViewModel viewModel;
   final Issue issueItem;
@@ -141,7 +145,7 @@ class _IssueTileState extends State<IssueTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 9),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -205,10 +209,18 @@ class _IssueTileState extends State<IssueTile> {
                     children: <Widget>[
                       IconButton(
                         onPressed: () {
-                          widget.viewModel.upVoteHandle(widget.issueItem.uid);
+                          if (widget.viewModel.upvotesSet
+                              .contains(widget.issueItem.uid)) {
+                            widget.viewModel.removeUpvote(widget.issueItem.uid);
+                          } else {
+                            widget.viewModel.addUpvote(widget.issueItem.uid);
+                          }
                         },
                         icon: Icon(
-                          Icons.thumb_up_off_alt,
+                          widget.viewModel.upvotesSet
+                                  .contains(widget.issueItem.uid)
+                              ? Icons.thumb_up_alt
+                              : Icons.thumb_up_alt_outlined,
                           color: ThemeService.primaryColor,
                           size: 25,
                         ),
@@ -223,22 +235,28 @@ class _IssueTileState extends State<IssueTile> {
                       ),
                     ],
                   ),
-                  // SizedBox(
-                  //   width: 5,
-                  // ),
+
                   Column(
                     children: <Widget>[
                       IconButton(
-                          onPressed: (){
-                            widget.viewModel.downVoteHandle(widget.issueItem.uid);
-                          },
-                          icon: Icon(
-                            Icons.thumb_down_off_alt_rounded,
-                            color: Colors.red,
-                            size: 24,
-                          ),
+                        onPressed: () {
+                          if (widget.viewModel.downvotesSet
+                              .contains(widget.issueItem.uid)) {
+                            widget.viewModel
+                                .removeDownvote(widget.issueItem.uid);
+                          } else {
+                            widget.viewModel.addDownvote(widget.issueItem.uid);
+                          }
+                        },
+                        icon: Icon(
+                          widget.viewModel.downvotesSet
+                                  .contains(widget.issueItem.uid)
+                              ? Icons.thumb_down_alt
+                              : Icons.thumb_down_alt_outlined,
+                          color: Colors.red,
+                          size: 24,
+                        ),
                       ),
-
                       Text(
                         formatNumber(widget.issueItem.downvotes),
                         style: TextStyle(

@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:mess_management/services/size_config.dart';
 import 'package:mess_management/services/theme_service.dart';
@@ -99,6 +100,76 @@ class _FeedbackPageState extends State<FeedbackPage> {
                       ),
                     ),
                   ),
+                ),
+                SizedBox(height: 20,),
+                DropdownButtonFormField2<String>(
+                  // selectedItemBuilder:,
+
+                  value: _viewModel.selectedMess,
+                  items: _viewModel.messes
+                      .map((category) => DropdownMenuItem<String>(
+                    value: category,
+                    child: IntrinsicWidth(
+                      child: Container(
+                        // height: double.infinity,
+                        child: Column(
+                          crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                          mainAxisAlignment:
+                          MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              category,
+                            ),
+                          ],
+                        ),
+                        //   decoration: BoxDecoration(
+                        //       color: category == _viewModel.selectedCategory
+                        //           ? ThemeService.primaryColor
+                        //               .withOpacity(0.05)
+                        //           : Colors.white),
+                      ),
+                    ),
+                  ))
+                      .toList(),
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        width: 2,
+                        color: ThemeService.primaryColor,
+                      ),
+                    ),
+                    floatingLabelStyle: TextStyle(
+                        color: ThemeService.primaryColor,
+                        fontWeight: FontWeight.bold),
+                    labelText: 'Category',
+                    labelStyle: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  dropdownStyleData: DropdownStyleData(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      // Set dropdown canvas border radius
+                      color: Colors
+                          .white, // Optional: Set dropdown background color
+                    ),
+                  ),
+                  onChanged: (value) {
+                    _viewModel.updateSelected(value);
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please select a category';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 20),
                 StarRatebar(
