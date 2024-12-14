@@ -106,14 +106,30 @@
 // }
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:mess_management/model/menu_model.dart';
 import 'package:mess_management/services/db_service.dart';
+import 'package:mess_management/services/hive_service.dart';
 import 'package:stacked/stacked.dart';
 
 class MenuViewModel extends BaseViewModel {
   MenuModel? _menuData;
+
   MenuModel? get menuData => _menuData;
+
+  List<String> days = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+
+  static const String prevMatcher = 'prevMatcher';
+  static const String cachedMenu = 'cachedMenu';
 
   bool isLoading = false;
 
@@ -249,6 +265,59 @@ class MenuViewModel extends BaseViewModel {
           },
         },
       });
+    //
+    final snapshot = await DBService.constants.get();
+    final docs = snapshot.docs;
+
+    final int remoteMatcher =
+        (docs.first.data() as Map<String, dynamic>)['value'];
+
+    int? localMatchcer =
+        (await HiveService().get(HiveService.menuCacheBox, prevMatcher)) as int?;
+
+    localMatchcer ??= 0;
+
+    // await HiveService()
+    //     .put(HiveService.menuCacheBox, prevMatcher, 0);
+
+    Map<String, dynamic> jsonData = {};
+    if (remoteMatcher > localMatchcer) {
+      try {
+        final response = await http.get(
+          Uri.parse(
+              'https://us-central1-mess-management-250df.cloudfunctions.net/getAllMenu'),
+        );
+        print("hitted");
+        if (response.statusCode == 200) {
+          jsonData = json.decode(response.body) as Map<String, dynamic>;
+          await HiveService()
+              .put(HiveService.menuCacheBox, cachedMenu, jsonData);
+          localMatchcer = remoteMatcher;
+          print('json');
+          await HiveService()
+              .put(HiveService.menuCacheBox, prevMatcher, localMatchcer);
+          print('kicak');
+
+        } else {
+          throw Exception(
+              'Failed to load menu. Status code: ${response.statusCode}');
+        }
+      } catch (error) {
+        throw Exception('An error occurred while fetching the menu: $error');
+      }
+    } else {
+      final cachedData =
+      await HiveService().get(HiveService.menuCacheBox, cachedMenu);
+      if (cachedData != null) {
+        jsonData = Map<String, dynamic>.from(cachedData); // Safe conversion
+      }
+    }
+    print(jsonData);
+
+    _menuData = MenuModel.fromJson(jsonData);
+
+    isLoading = false;
+    notifyListeners();
 
     } catch (error) {
       print("Error occurred: $error");
@@ -260,6 +329,7 @@ class MenuViewModel extends BaseViewModel {
   }
 
   // Determines the current meal type based on the time
+// Determines the current meal type based on the time
   String getCurrentMealType(DateTime currentTime) {
     final hour = currentTime.hour;
 

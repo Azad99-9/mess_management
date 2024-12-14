@@ -272,8 +272,20 @@ class MessMenuPage extends StackedView<MenuViewModel> {
           ),
           backgroundColor: ThemeService.primaryColor,
         ),
-        body: TabBarView(
-          children: menuData.data.keys.map((day) {
+
+
+
+        body: viewModel.isLoading
+            ? Center(
+          child: Container(
+              height: 30,
+              width: 30,
+              child: CircularProgressIndicator(
+                color: ThemeService.primaryColor,
+              )),
+        )
+            : TabBarView(
+          children: menuData!.data.keys.map((day) {
             final dayData = menuData.data[day]!;
             final meals = {
               'breakFast': dayData.breakFast,
@@ -312,12 +324,14 @@ class MessMenuPage extends StackedView<MenuViewModel> {
                           Expanded(
                             child: Padding(
                               padding: EdgeInsets.symmetric(
-                                vertical: isHighlighted ? 24 : 16,
-                                horizontal: 16,
-                              ),
+
+                                  vertical: isHighlighted ? 24 : 16,
+                                  horizontal: 16),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
                                 children: [
+                                  // Title Text
                                   Padding(
                                     padding: EdgeInsets.symmetric(
                                         vertical: isHighlighted ? 0 : 2),
@@ -326,38 +340,50 @@ class MessMenuPage extends StackedView<MenuViewModel> {
                                       style: TextStyle(
                                         color: isHighlighted
                                             ? ThemeService.primaryColor
-                                            : Colors.black.withOpacity(0.5),
+
+                                            : Colors.black
+                                            .withOpacity(0.5),
                                         fontSize: isHighlighted ? 24 : 16,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),
-                                  ...items.map<Widget>((item) =>
 
-                                       Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 0.0),
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                "${item.itemName} (${item
-                                                    .quantityServed}, ${item
-                                                    .grams} grams, ${item
-                                                    .calories} cal)",
-                                                style: TextStyle(
-                                                  color: isHighlighted
-                                                      ? Colors.black
-                                                      : Colors.black
-                                                      .withOpacity(0.5),
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                  // Sublist items with better spacing and styling
+                                  ...items.map<Widget>((item) => Padding(
+                                    padding:
+                                    const EdgeInsets.symmetric(
+                                        vertical: 0.0),
+                                    child: Row(
+                                      children: [
+                                        // Bullet point
+                                        // Container(
+                                        //   width: isHighlighted ? 5 : 4,
+                                        //   height: isHighlighted ? 5 : 4,
+                                        //   decoration: BoxDecoration(
+                                        //     shape: BoxShape.circle,
+                                        //     color: Colors.black,
+                                        //   ),
+                                        // ),
+                                        // const SizedBox(width: 6),
+                                        // Space between bullet and text
+                                        Expanded(
+                                          child: Text(
+                                            "${item.itemName} (${item.quantityServed},${item.grams} grams, ${item.calories} cal)",
+                                            style: TextStyle(
+                                                color: isHighlighted
+                                                    ? Colors.black
+                                                    : Colors.black
+                                                    .withOpacity(
+                                                    0.5),
+                                                fontSize: 14,
+                                                fontWeight:
+                                                FontWeight.w400),
+                                          ),
                                         ),
-                                      )),
+                                      ],
+                                    ),
+                                  )),
                                 ],
                               ),
                             ),
