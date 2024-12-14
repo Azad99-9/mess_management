@@ -74,7 +74,6 @@ class MenuViewModel extends BaseViewModel {
     } else {
       final cachedData =
       await HiveService().get(HiveService.menuCacheBox, cachedMenu);
-      print(cachedData);
       if (cachedData != null) {
         jsonData = Map<String, dynamic>.from(cachedData); // Safe conversion
       }
