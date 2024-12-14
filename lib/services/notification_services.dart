@@ -121,6 +121,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mess_management/views/common_issues.dart';
+import 'package:mess_management/views/complaints.dart';
 import 'package:mess_management/views/feedback_page.dart';
 import 'package:mess_management/views/menu.dart';
 
@@ -189,7 +190,7 @@ class NotificationServices {
   }
 
   // Show notifications
-  Future<void> showNotification(RemoteMessage message) async {
+   Future<void> showNotification(RemoteMessage message) async {
     AndroidNotificationChannel channel = AndroidNotificationChannel(
       Random.secure().nextInt(10000).toString(),
       "RGUKT notifications",
@@ -238,7 +239,13 @@ class NotificationServices {
         context,
         MaterialPageRoute(builder: (context) => CommonIssues()),
       );
-    } else {
+    } else if (message.data['type'] == 'complaint') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SubmitComplaintPage()),
+      );
+    }
+    else {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => MessMenuPage()),

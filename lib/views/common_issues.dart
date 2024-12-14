@@ -98,6 +98,19 @@ class CommonIssues extends StackedView<CommonIssuesViewModel> {
                 ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed:(){
+          viewModel.floatingAction(context);
+        },
+        child: Icon(
+          Icons.add,
+          size: 40,
+          color: ThemeService.secondaryBackgroundColor,
+        ),
+        backgroundColor: ThemeService.primaryColor,
+        splashColor: ThemeService.primaryAccent,
+        shape: CircleBorder(),
+      ),
     );
   }
 
@@ -287,7 +300,7 @@ class _IssueTileState extends State<IssueTile> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Raised by ${widget.issueItem.raisedBy}',
+                'Raised by ${widget.issueItem.name}',
                 style: TextStyle(
                     color: Colors.black.withOpacity(0.6),
                     fontSize: 16,
@@ -311,25 +324,6 @@ class _IssueTileState extends State<IssueTile> {
               SizedBox(
                 height: 1,
               ),
-              // Row(
-              //   children: [
-              //     Text(
-              //       '${widget.issueItem.upvotes} upvotes',
-              //       style: TextStyle(
-              //           color: Colors.black,
-              //           fontSize: 16,
-              //           fontWeight: FontWeight.w400),
-              //     ),
-              //     Text(
-              //       ' ${widget.issueItem.downvotes} downvotes',
-              //       style: TextStyle(
-              //         color: Colors.black,
-              //         fontSize: 16,
-              //         fontWeight: FontWeight.w400,
-              //       ),
-              //     ),
-              //   ],
-              // )
             ],
           ),
           Column(
