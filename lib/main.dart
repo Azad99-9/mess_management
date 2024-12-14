@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hive/hive.dart';
 import 'package:mess_management/constants/routes.dart';
 import 'package:mess_management/firebase_options.dart';
@@ -10,7 +12,10 @@ import 'package:mess_management/router.dart';
 import 'package:mess_management/services/notification_services.dart';
 
 import 'package:mess_management/services/hive_service.dart';
+import 'package:mess_management/services/size_config.dart';
 import 'package:mess_management/services/theme_service.dart';
+import 'package:mess_management/services/user_service.dart';
+
 import 'package:mess_management/views/common_issues.dart';
 import 'package:mess_management/views/complaints.dart';
 import 'package:mess_management/views/menu.dart';
@@ -23,6 +28,7 @@ import 'package:path_provider/path_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.remove();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -35,16 +41,17 @@ Future<void> main() async {
 
   HiveService.menuCacheBox = await HiveService().openBox(HiveService.menuCache);
   runApp(const MyApp());
-
 }
+
 @pragma('vm:entry-point')
-  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message)async {
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-   NotificationServices().showNotification(message);
-
+  NotificationServices().showNotification(message);
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -70,7 +77,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       navigatorKey: navigationService.navigatorKey,
-      initialRoute: userService.loggedIn ? Routes.home : Routes.signIn,
+      initialRoute: Routes.splashScreen,
       onGenerateRoute: generateRoute,
     );
   }
@@ -94,13 +101,13 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
     notificationService.requestNotificationPermission();
     notificationService.getToken();
     // notificationService.FirebaseInit(context);
   }
+
   int _currentPage = 0;
 
   final PageController _pageController = PageController(initialPage: 0);
@@ -270,6 +277,104 @@ class _MainScreenState extends State<MainScreen> {
               label: 'Profile',
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  // Controls the opacity of the splash screen
+  double _opacity = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Start the animation after the widget has been initialized
+    _animateSplashScreen();
+  }
+
+  // Function to animate the splash screen
+  Future<void> _animateSplashScreen() async {
+    await Future.delayed(
+        const Duration(milliseconds: 500)); // Delay before fade-in
+    setState(() {
+      _opacity = 1.0; // Change opacity to 1 to fade in
+    });
+
+    // Navigate to the next screen after a delay
+    await Future.delayed(const Duration(seconds: 3));
+    // Navigate to the home screen or main screen
+
+    if (UserService().loggedIn) {
+      final docRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(UserService.currentUser!.uid);
+      final DocumentSnapshot snapshot = await docRef.get();
+      if (!snapshot.exists) {
+        navigationService.pushReplacementScreen(Routes.signUp,
+            arguments: UserService.currentUser);
+
+      } else {
+        navigationService.pushReplacementScreen(Routes.home);
+      }
+    } else {
+      navigationService.pushReplacementScreen(Routes.signIn);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: ThemeService.primaryAccent,
+      body: Center(
+        child: AnimatedOpacity(
+          opacity: _opacity,
+          duration: const Duration(seconds: 1),
+          // Animation duration for fade-in
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: const AssetImage('assets/images/logo.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              const Text(
+                "RGUKT",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff00444E),
+                ),
+              ),
+              Container(
+                width: 300,
+                child: Text(
+                  'Mess Management System',
+                  softWrap: true,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff00444E),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

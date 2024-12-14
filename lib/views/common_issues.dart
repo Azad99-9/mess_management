@@ -105,7 +105,7 @@ class CommonIssues extends StackedView<CommonIssuesViewModel> {
         child: Icon(
           Icons.add,
           size: 40,
-          color: ThemeService.secondaryBackgroundColor,
+          color: Colors.white,
         ),
         backgroundColor: ThemeService.primaryColor,
         splashColor: ThemeService.primaryAccent,

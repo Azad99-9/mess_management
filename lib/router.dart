@@ -21,6 +21,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case Routes.signUp:
       return MaterialPageRoute(builder: (context) => SigninDetailsPage(userDetails: settings.arguments as User,));
 
+    case Routes.splashScreen:
+      return MaterialPageRoute(builder: (context) => SplashScreen());
+
     default:
       return MaterialPageRoute(builder: (context) => Container());
   }

@@ -8,6 +8,7 @@ import 'package:mess_management/model/user_model.dart';
 import 'package:mess_management/services/notification_services.dart';
 
 class SigninDetailsViewModel extends ChangeNotifier {
+  bool isLoading = false;
   late final TextEditingController nameController;
   late final TextEditingController emailController;
   late final TextEditingController phoneController;
@@ -15,18 +16,23 @@ class SigninDetailsViewModel extends ChangeNotifier {
   FocusNode nameFocus = FocusNode();
   FocusNode emailFocus = FocusNode();
   FocusNode phoneFocus = FocusNode();
+  late void Function(void Function() fn) _setState;
 
   late final User userDetails;
 
-  void initialise(User user) {
+  void initialise(User user, void Function(void Function() fn) setState) {
     userDetails = user;
     nameController = TextEditingController(text: userDetails.displayName ?? '');
     emailController = TextEditingController(text: userDetails.email);
     phoneController = TextEditingController(text: userDetails.phoneNumber);
     genderController = TextEditingController();
+    _setState = setState;
   }
 
   void submit() async {
+    _setState(() {
+      isLoading = true;
+    });
     nameFocus.unfocus();
     emailFocus.unfocus();
     phoneFocus.unfocus();
@@ -42,9 +48,12 @@ class SigninDetailsViewModel extends ChangeNotifier {
             FCS_TOKEN: FCS_TOKEN,
         ),
       );
-      navigationService.pushScreen(Routes.menu);
+      navigationService.pushReplacementScreen(Routes.home);
     } catch (e) {
       print(e.toString());
     }
+    _setState(() {
+      isLoading = false;
+    });
   }
 }

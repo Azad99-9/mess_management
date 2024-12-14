@@ -286,6 +286,11 @@ class SubmitComplaintPage extends StackedView<ComplaintsPageViewModel> {
                             onPressed: _viewModel.pickAttachment,
                           ),
                         ),
+                        if (_viewModel.attachmentPath != null)
+                          Container(
+                            decoration: BoxDecoration(image: DecorationImage(image: NetworkImage(_viewModel.attachmentPath!,)),),
+                          ),
+
                         const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: _viewModel.submitComplaint,

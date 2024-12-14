@@ -1,4 +1,5 @@
 
+import 'package:flutter/material.dart';
 import 'package:mess_management/model/menu_model.dart';
 import 'package:mess_management/services/db_service.dart';
 import 'package:mess_management/services/hive_service.dart';
@@ -6,6 +7,7 @@ import 'package:stacked/stacked.dart';
 
 class MenuViewModel extends BaseViewModel {
   MenuModel? _menuData;
+  late TabController tabController;
 
   MenuModel? get menuData => _menuData;
 

@@ -64,6 +64,7 @@ class MessMenuPage extends StackedView<MenuViewModel> {
             )
           ],
           bottom: TabBar(
+            // controller: ,
             labelColor: ThemeService.secondaryColor,
             indicatorColor: ThemeService.secondaryColor,
             unselectedLabelColor: Colors.grey,
@@ -94,8 +95,9 @@ class MessMenuPage extends StackedView<MenuViewModel> {
                       children: meals.entries.map((meal) {
                         final mealType = meal.key;
                         final items = meal.value;
-                        final isHighlighted = mealType.toLowerCase() ==
-                            currentMealType.toLowerCase();
+                        final isHighlighted = mealType.toLowerCase() == currentMealType.toLowerCase() &&
+                            DateTime.now().weekday == DateTime.now().weekday;
+
 
                         return AnimatedContainer(
 
@@ -118,6 +120,7 @@ class MessMenuPage extends StackedView<MenuViewModel> {
                                   ),
                               ]),
                           child: ExpansionTile(
+                            initiallyExpanded: isHighlighted,
                             shape: Border.all(
                               color: Colors.transparent, // Ensure no border is visible
                               width: 0, // No border width
@@ -212,6 +215,7 @@ class MessMenuPage extends StackedView<MenuViewModel> {
                   );
                 }).toList(),
               ),
+        // bottomNavigationBar: Container(),
       ),
     );
   }

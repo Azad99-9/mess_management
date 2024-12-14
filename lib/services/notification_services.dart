@@ -208,6 +208,8 @@ class NotificationServices {
       presentAlert: true,
       presentSound: true,
       presentBadge: true,
+      presentBanner: true,
+      interruptionLevel: InterruptionLevel.critical,
     );
 
     NotificationDetails notificationDetails = NotificationDetails(
