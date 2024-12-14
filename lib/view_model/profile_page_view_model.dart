@@ -25,6 +25,7 @@ class ProfilePageViewModel extends BaseViewModel{
 
    ProfilePageViewModel() {
      _userService = locator<UserService>();
+     fetchUserComplaints();
    }
    void fetchCurrentUser() async {
      isLoading = true;
@@ -56,6 +57,7 @@ class ProfilePageViewModel extends BaseViewModel{
              complaintsList.add(complaintDetails);
            }
            _complaints = complaintsList;
+
            notifyListeners();
          } else {
            print("No complaints exist.");
