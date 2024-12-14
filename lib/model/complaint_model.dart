@@ -4,6 +4,8 @@ class ComplaintModel {
   late final String category;
   late final String uploadUrl;
   late final String uid;
+  late final String mess;
+  late final String status;
 
   // Constructor
   ComplaintModel({
@@ -12,6 +14,8 @@ class ComplaintModel {
     required this.category,
     required this.uploadUrl,
     required this.uid,
+    required this.mess,
+    required this.status,
   });
 
   // From JSON method
@@ -22,6 +26,8 @@ class ComplaintModel {
       category: json['category'] as String,
       uploadUrl: json['uploadUrl'] as String,
       uid: json['uid'] as String,
+      mess: json['mess'] as String,
+      status: json['status'] as String,
     );
   }
 
@@ -33,6 +39,8 @@ class ComplaintModel {
       'category': category,
       'uploadUrl': uploadUrl,
       'uid': uid,
+      'status':status,
+      'mess':mess,
     };
   }
 }

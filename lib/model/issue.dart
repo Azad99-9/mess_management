@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Issue {
   late String uid;
+  late String name;
   late String raisedBy;
   late String title;
   late int upvotes;
@@ -12,6 +15,8 @@ class Issue {
     required this.title,
     required this.upvotes,
     required this.downvotes,
+    required this.name,
+
   });
 
   factory Issue.fromJson(Map<String, dynamic> json) {
@@ -21,6 +26,7 @@ class Issue {
       raisedBy: json['raisedBy'],
       upvotes: json['upvotes'],
       downvotes: json['downvotes'],
+      name: json['name'],
     );
   }
 

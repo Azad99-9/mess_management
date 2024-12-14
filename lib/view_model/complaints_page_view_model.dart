@@ -15,11 +15,16 @@ class ComplaintsPageViewModel extends BaseViewModel {
   String? selectedCategory;
   List<String> categories = ['Food', 'Hygiene', 'Service', 'Other'];
   String? attachmentPath;
-
+  String?selectedMess="Mess I";
+  List<String> messes = ['Mess I', 'Mess II', 'Mess III', 'Mess IV'];
   BuildContext? context;
 
   void updateSelected(value) {
     selectedCategory = value!;
+    notifyListeners();
+  }
+  void updateSelectedMess(value) {
+    selectedMess = value!;
     notifyListeners();
   }
 
@@ -49,6 +54,8 @@ class ComplaintsPageViewModel extends BaseViewModel {
         description: description ?? '',
         title: title ?? '',
         uploadUrl: downloadUrl ?? '',
+        mess:selectedMess??'',
+        status:"progress"
       ).toJson());
 
       ScaffoldMessenger.of(context!).showSnackBar(
