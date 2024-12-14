@@ -25,7 +25,8 @@ class CommonIssuesViewModel extends BaseViewModel {
     final QuerySnapshot ref = await DBService.issues.get();
 
     issues = ref.docs.map((doc) {
-      final data = doc.data() as Map<String, dynamic>; // Cast the data to Map
+      final data = doc.data() as Map<String, dynamic>;
+      print(data);
       return Issue.fromJson(data);
     }).toList();
 
