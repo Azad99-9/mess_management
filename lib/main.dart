@@ -10,12 +10,12 @@ import 'package:mess_management/constants/routes.dart';
 import 'package:mess_management/firebase_options.dart';
 import 'package:mess_management/router.dart';
 import 'package:mess_management/services/notification_services.dart';
-
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:mess_management/services/hive_service.dart';
 import 'package:mess_management/services/size_config.dart';
 import 'package:mess_management/services/theme_service.dart';
 import 'package:mess_management/services/user_service.dart';
-
+import 'package:mess_management/services/notification_services.dart';
 import 'package:mess_management/views/common_issues.dart';
 import 'package:mess_management/views/complaints.dart';
 import 'package:mess_management/views/menu.dart';
@@ -26,31 +26,48 @@ import 'package:firebase_analytics/observer.dart';
 
 import 'package:path_provider/path_provider.dart';
 
+Future<void> firebaseBackgroundHandler(RemoteMessage message) async {
+  final Map<String, String?> payload = message.data.map((key, value) => MapEntry(key, value.toString()));
+
+  await AwesomeNotifications().createNotification(
+    content: NotificationContent(
+      id: -1,
+      channelKey: 'rgukt_channel',
+      title: message.data['title'] ?? 'No Title',
+      body: message.data['body'] ?? 'No Body',
+      summary: message.data['summary'],
+      bigPicture: message.data['bigPicture'],
+      notificationLayout: message.data['bigPicture'] != null
+          ? NotificationLayout.BigPicture
+          : NotificationLayout.BigText,
+      payload: payload,
+    ),
+  );
+  notificationService.showNotification(message);
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.remove();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   setUpLocator();
-  final appDocumentDir = await getApplicationDocumentsDirectory();
+  FirebaseMessaging.onBackgroundMessage(firebaseBackgroundHandler);
 
+  final appDocumentDir = await getApplicationDocumentsDirectory();
+  notificationService.initializeNotification();
   // Initialize Hive with the directory path
   Hive.init(appDocumentDir.path);
 
   HiveService.menuCacheBox = await HiveService().openBox(HiveService.menuCache);
-  runApp(const MyApp());
+  runApp( MyApp());
 }
 
-@pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  NotificationServices().showNotification(message);
-}
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+   MyApp({super.key});
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   // This widget is the root of your application.
   @override
@@ -103,10 +120,10 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    notificationService.requestNotificationPermission();
     notificationService.getToken();
-    // notificationService.FirebaseInit(context);
+    notificationService.firebaseInit(context);
   }
+
 
   int _currentPage = 0;
 
