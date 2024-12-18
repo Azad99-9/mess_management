@@ -107,7 +107,7 @@ class CommonIssues extends StackedView<CommonIssuesViewModel> {
           size: 40,
           color: Colors.white,
         ),
-        backgroundColor: ThemeService.primaryColor,
+        backgroundColor: Color(0xff1D9BF0),
         splashColor: ThemeService.primaryAccent,
         shape: CircleBorder(),
       ),
@@ -186,7 +186,7 @@ class IssueTileShimmer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Shimmer.fromColors(
-                baseColor: Colors.grey[300]!,
+                baseColor:  Colors.black26,
                 highlightColor: Colors.grey[100]!,
                 child: Container(
                   width: 150,
@@ -199,7 +199,7 @@ class IssueTileShimmer extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Shimmer.fromColors(
-                baseColor: Colors.grey[300]!,
+                baseColor:Colors.black26,
                 highlightColor: Colors.grey[100]!,
                 child: Container(
                   width: 250,
@@ -222,14 +222,14 @@ class IssueTileShimmer extends StatelessWidget {
                   Column(
                     children: <Widget>[
                       Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
+                        baseColor: Colors.black26,
                         highlightColor: Colors.grey[100]!,
                         child: Icon(Icons.thumb_up_alt_outlined,
                             size: 25, color: Colors.grey),
                       ),
                       const SizedBox(height: 4),
                       Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
+                        baseColor: Colors.black26,
                         highlightColor: Colors.grey[100]!,
                         child: Container(
                           width: 30,
@@ -246,14 +246,14 @@ class IssueTileShimmer extends StatelessWidget {
                   Column(
                     children: <Widget>[
                       Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
+                        baseColor: Colors.black26,
                         highlightColor: Colors.grey[100]!,
                         child: Icon(Icons.thumb_down_alt_outlined,
                             size: 25, color: Colors.grey),
                       ),
                       const SizedBox(height: 4),
                       Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
+                        baseColor: Colors.black26,
                         highlightColor: Colors.grey[100]!,
                         child: Container(
                           width: 30,
@@ -291,7 +291,10 @@ class _IssueTileState extends State<IssueTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 9),
+      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 9),
+      decoration: BoxDecoration(
+        border: Border.all(width: 0.5,color: ThemeService.secondaryBackgroundColor)
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -302,8 +305,8 @@ class _IssueTileState extends State<IssueTile> {
               Text(
                 'Raised by ${widget.issueItem.name}',
                 style: TextStyle(
-                    color: Colors.black.withOpacity(0.6),
-                    fontSize: 16,
+                    color: ThemeService.secondaryBackgroundColor,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -316,8 +319,8 @@ class _IssueTileState extends State<IssueTile> {
                   // softWrap: true,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
+                      color: ThemeService.secondaryColor,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold),
                 ),
               ),
@@ -348,7 +351,7 @@ class _IssueTileState extends State<IssueTile> {
                                   .contains(widget.issueItem.uid)
                               ? Icons.thumb_up_alt
                               : Icons.thumb_up_alt_outlined,
-                          color: ThemeService.primaryColor,
+                          color: ThemeService.secondaryColor,
                           size: 25,
                         ),
                       ),
@@ -356,7 +359,7 @@ class _IssueTileState extends State<IssueTile> {
                         // '${widget.issueItem.upvotes}K',
                         formatNumber(widget.issueItem.upvotes),
                         style: TextStyle(
-                            color: Colors.black.withOpacity(0.6),
+                            color: ThemeService.secondaryBackgroundColor,
                             fontSize: 12,
                             fontWeight: FontWeight.bold),
                       ),
@@ -387,26 +390,13 @@ class _IssueTileState extends State<IssueTile> {
                       Text(
                         formatNumber(widget.issueItem.downvotes),
                         style: TextStyle(
-                          color: Colors.black.withOpacity(0.6),
+                          color: ThemeService.secondaryBackgroundColor,
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
-                  )
-                  // Icon(
-                  //   Icons.thumb_up_off_alt,
-                  //   color: ThemeService.primaryColor,
-                  //   size: 25,
-                  // ),
-                  // SizedBox(
-                  //   width: 10,
-                  // ),
-                  // Icon(
-                  //   Icons.thumb_down_off_alt_rounded,
-                  //   color: Colors.red,
-                  //   size: 25,
-                  // )
+                  ),
                 ],
               )
             ],

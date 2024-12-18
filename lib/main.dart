@@ -23,7 +23,7 @@ import 'package:mess_management/views/profile_page.dart';
 import 'package:mess_management/locator.dart';
 import 'package:mess_management/views/feedback_page.dart';
 import 'package:firebase_analytics/observer.dart';
-
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:path_provider/path_provider.dart';
 
 Future<void> firebaseBackgroundHandler(RemoteMessage message) async {
@@ -202,14 +202,14 @@ class _MainScreenState extends State<MainScreen> {
                     Icon(
                       Icons.feedback_outlined,
                       size: 35,
-                      color: Colors.blue,
+                      color: ThemeService.secondaryBackgroundColor,
                     ),
                     SizedBox(
                       width: 8,
                     ),
                     Text(
                       'Feedback',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold,color: ThemeService.secondaryColor),
                     ),
                   ],
                 ),
@@ -230,14 +230,14 @@ class _MainScreenState extends State<MainScreen> {
                     Icon(
                       Icons.report_gmailerrorred,
                       size: 35,
-                      color: Colors.blue,
+                      color: ThemeService.secondaryBackgroundColor,
                     ),
                     SizedBox(
                       width: 8,
                     ),
                     Text(
                       'Complaints',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold,color: ThemeService.secondaryColor),
                     ),
                   ],
                 ),
@@ -272,30 +272,44 @@ class _MainScreenState extends State<MainScreen> {
           ProfilePage(),
         ],
       ),
-      bottomNavigationBar: Container(
-        color: Colors.white,
-        child: BottomNavigationBar(
-          backgroundColor: Colors.white,
-          selectedItemColor: ThemeService.primaryColor,
-          unselectedItemColor: ThemeService.secondaryBackgroundColor,
-          currentIndex: _currentPage,
-          onTap: _onBottomNavTapped,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.menu_book),
-              label: 'Menu',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.auto_graph),
-              label: 'Trending',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
+      bottomNavigationBar: CurvedNavigationBar(
+        buttonBackgroundColor:ThemeService.primaryColor,
+          color: ThemeService.primaryColor,
+          backgroundColor: ThemeService.secondaryColor,
+          height: SizeConfig.screenHeight*0.07,
+          animationDuration: Duration(milliseconds: 100),
+          items: <Widget>[
+            Icon(Icons.menu_book,color: ThemeService.secondaryColor,),
+            Icon(Icons.auto_graph,color: ThemeService.secondaryColor,),
+            Icon(Icons.person,color: ThemeService.secondaryColor,),
           ],
-        ),
+        onTap: _onBottomNavTapped,
       ),
+      // bottomNavigationBar: Container(
+      //   color: Colors.white,
+      //   child:
+      //   BottomNavigationBar(
+      //     backgroundColor: Colors.white,
+      //     selectedItemColor: ThemeService.primaryColor,
+      //     unselectedItemColor: ThemeService.secondaryBackgroundColor,
+      //     currentIndex: _currentPage,
+      //     onTap: _onBottomNavTapped,
+      //     items: const [
+      //       BottomNavigationBarItem(
+      //         icon: Icon(Icons.menu_book),
+      //         label: 'Menu',
+      //       ),
+      //       BottomNavigationBarItem(
+      //         icon: Icon(Icons.auto_graph),
+      //         label: 'Trending',
+      //       ),
+      //       BottomNavigationBarItem(
+      //         icon: Icon(Icons.person),
+      //         label: 'Profile',
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 }

@@ -29,7 +29,11 @@ class MessMenuPage extends StackedView<MenuViewModel> {
     }
 
     if (menuData == null) {
-      return Center(child: Text("No menu data available. Please try again."));
+      return Center(
+          child: Text(
+        "No menu data available. Please try again.",
+        style: TextStyle(color: ThemeService.secondaryColor),
+      ));
     }
 
     final currentTime = DateTime.now();
@@ -95,12 +99,11 @@ class MessMenuPage extends StackedView<MenuViewModel> {
                       children: meals.entries.map((meal) {
                         final mealType = meal.key;
                         final items = meal.value;
-                        final isHighlighted = mealType.toLowerCase() == currentMealType.toLowerCase() &&
+                        final isHighlighted = mealType.toLowerCase() ==
+                                currentMealType.toLowerCase() &&
                             DateTime.now().weekday == DateTime.now().weekday;
 
-
                         return AnimatedContainer(
-
                           duration: const Duration(milliseconds: 500),
                           margin: const EdgeInsets.symmetric(vertical: 8),
                           decoration: BoxDecoration(
@@ -108,6 +111,7 @@ class MessMenuPage extends StackedView<MenuViewModel> {
                                   ? Colors.white
                                   : ThemeService.primaryAccent,
                               borderRadius: BorderRadius.circular(12),
+                              border: Border.all(width: 1,color: ThemeService.secondaryBackgroundColor),
                               boxShadow: [
                                 if (isHighlighted)
                                   BoxShadow(
@@ -122,7 +126,8 @@ class MessMenuPage extends StackedView<MenuViewModel> {
                           child: ExpansionTile(
                             initiallyExpanded: isHighlighted,
                             shape: Border.all(
-                              color: Colors.transparent, // Ensure no border is visible
+                              color: Colors
+                                  .transparent, // Ensure no border is visible
                               width: 0, // No border width
                             ),
                             leading: Icon(
@@ -138,7 +143,7 @@ class MessMenuPage extends StackedView<MenuViewModel> {
                                 fontWeight: FontWeight.bold,
                                 color: isHighlighted
                                     ? ThemeService.primaryColor
-                                    : Colors.black,
+                                    :ThemeService.secondaryColor,
                               ),
                             ),
                             children: items.map<Widget>((item) {
@@ -186,7 +191,7 @@ class MessMenuPage extends StackedView<MenuViewModel> {
                                               fontWeight: FontWeight.bold,
                                               color: isHighlighted
                                                   ? Colors.black
-                                                  : Colors.grey.shade800,
+                                                  : ThemeService.secondaryColor,
                                             ),
                                           ),
                                           // Quantity, Grams, Calories
@@ -194,7 +199,9 @@ class MessMenuPage extends StackedView<MenuViewModel> {
                                             "${item.quantityServed}, ${item.grams}g, ${item.calories} cal",
                                             style: TextStyle(
                                               fontSize: 14,
-                                              fontWeight: isHighlighted ? FontWeight.w500 : FontWeight.w400,
+                                              fontWeight: isHighlighted
+                                                  ? FontWeight.w500
+                                                  : FontWeight.w400,
                                               color: isHighlighted
                                                   ? ThemeService.primaryColor
                                                   : Colors.grey.shade600,

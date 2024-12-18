@@ -79,11 +79,11 @@ class SubmitComplaintPage extends StackedView<ComplaintsPageViewModel> {
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 2,
-                                color: ThemeService.primaryColor,
+                                color: ThemeService.secondaryColor,
                               ), // Customize the border color
                             ),
                             floatingLabelStyle: TextStyle(
-                                color: ThemeService.primaryColor,
+                                color: ThemeService.secondaryBackgroundColor,
                                 fontWeight: FontWeight.bold),
                             labelStyle: TextStyle(
                                 fontSize: 14,
@@ -91,6 +91,9 @@ class SubmitComplaintPage extends StackedView<ComplaintsPageViewModel> {
                                 fontWeight: FontWeight.bold),
                             labelText: 'Title',
                             border: OutlineInputBorder(),
+                          ),
+                          style: TextStyle(
+                            color: ThemeService.secondaryColor,
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -106,11 +109,11 @@ class SubmitComplaintPage extends StackedView<ComplaintsPageViewModel> {
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 2,
-                                color: ThemeService.primaryColor,
+                                color: ThemeService.secondaryColor,
                               ), // Customize the border color
                             ),
                             floatingLabelStyle: TextStyle(
-                                color: ThemeService.primaryColor,
+                                color: ThemeService.secondaryBackgroundColor,
                                 fontWeight: FontWeight.bold),
                             labelStyle: TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -119,6 +122,7 @@ class SubmitComplaintPage extends StackedView<ComplaintsPageViewModel> {
                             labelText: 'Description',
                             border: OutlineInputBorder(),
                           ),
+                          style: TextStyle(color: ThemeService.secondaryColor),
                           maxLines: 4,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -272,7 +276,7 @@ class SubmitComplaintPage extends StackedView<ComplaintsPageViewModel> {
                           title: Text(
                             'Attachment',
                             style: TextStyle(
-                                color: ThemeService.primaryColor,
+                                color: ThemeService.secondaryColor,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -281,7 +285,7 @@ class SubmitComplaintPage extends StackedView<ComplaintsPageViewModel> {
                           trailing: IconButton(
                             icon: const Icon(
                               Icons.attach_file,
-                              color: ThemeService.primaryColor,
+                              color: ThemeService.secondaryBackgroundColor,
                             ),
                             onPressed: _viewModel.pickAttachment,
                           ),
@@ -292,18 +296,25 @@ class SubmitComplaintPage extends StackedView<ComplaintsPageViewModel> {
                           ),
 
                         const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: _viewModel.submitComplaint,
-                          style: ButtonStyle(
-                              shape: WidgetStatePropertyAll(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                              ),
-                              backgroundColor: WidgetStatePropertyAll(
-                                  ThemeService.primaryColor)),
-                          child: const Text(
-                            'Submit Complaint',
-                            style: TextStyle(color: Colors.white),
+                        Center(
+                          child: ElevatedButton(
+                            onPressed: _viewModel.submitComplaint,
+                            style: ButtonStyle(
+                                shape: WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    side: BorderSide(
+                                      color: ThemeService.secondaryBackgroundColor, // Border color
+                                      width: 2,                           // Border width
+                                    ),
+                                  ),
+                                ),
+                                backgroundColor: WidgetStatePropertyAll(
+                                    ThemeService.primaryColor)),
+                            child: const Text(
+                              'Submit Complaint',
+                              style: TextStyle(color:ThemeService.secondaryColor),
+                            ),
                           ),
                         ),
                       ],
