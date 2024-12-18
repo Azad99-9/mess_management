@@ -118,6 +118,7 @@ class ProfilePage extends StackedView<ProfilePageViewModel> {
                 user?.name ?? 'User',
                 style: TextStyle(
                   fontSize: 20,
+                  color: ThemeService.secondaryColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -155,18 +156,26 @@ class ProfilePage extends StackedView<ProfilePageViewModel> {
 
   Widget _buildListTile(IconData icon, String title, String subtitle) {
     return ListTile(
-      leading: Icon(icon, color: Colors.blue),
-      title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+      leading: Icon(icon, color: ThemeService.secondaryBackgroundColor),
+      title: Text(title, style: TextStyle(fontWeight: FontWeight.bold,color: ThemeService.secondaryBackgroundColor)),
       subtitle: Text(subtitle),
+      subtitleTextStyle: TextStyle(
+        color: ThemeService.secondaryColor
+      ),
+
     );
   }
 
   Widget _buildComplaint(String title, String mess, String description,String Status,String uploadURL) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
-      color: ThemeService.primaryAccent,
+      color: ThemeService.primaryColor,
       elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),
+      side: BorderSide(
+        color: ThemeService.secondaryBackgroundColor,
+        width: 0.5
+      )),
       child: Column(
         children: [
           if (uploadURL != null)
@@ -185,18 +194,18 @@ class ProfilePage extends StackedView<ProfilePageViewModel> {
               ),
             ),
           ListTile(
-            leading: Icon(Icons.report, color:ThemeService.primaryColor),
+            leading: Icon(Icons.report, color:ThemeService.secondaryBackgroundColor),
             title: Text(
               title,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold,color: ThemeService.secondaryColor),
             ),
             subtitle: Text(
               mess,
-              style: TextStyle(color: Colors.black.withOpacity(0.6)),
+              style: TextStyle(color:ThemeService.secondaryBackgroundColor,)
             ),
             trailing: Text(
               Status,
-              style: TextStyle(color: Colors.black.withOpacity(0.6),
+              style: TextStyle(color:ThemeService.secondaryBackgroundColor,
               fontWeight: FontWeight.bold),
             ),
           ),
@@ -204,7 +213,7 @@ class ProfilePage extends StackedView<ProfilePageViewModel> {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               description,
-              style: TextStyle(color: Colors.black.withOpacity(0.6)),
+              style: TextStyle(color: ThemeService.secondaryColor),
             ),
           ),
         ],

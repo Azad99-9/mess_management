@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:mess_management/services/theme_service.dart';
 
 class StarRatebar extends StatefulWidget {
   const StarRatebar({super.key,required this.text,required this.controller});
@@ -19,7 +20,7 @@ class _StarRatebarState extends State<StarRatebar> {
       children: [
          Text(
           widget.text,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300,color: ThemeService.secondaryColor),
         ),
         const SizedBox(height: 5),
         RatingBar.builder(
@@ -32,6 +33,7 @@ class _StarRatebarState extends State<StarRatebar> {
             Icons.star_rounded,
             color: Colors.amber,
           ),
+          unratedColor: ThemeService.secondaryBackgroundColor,
           glow: true,
           glowRadius: 3,
           glowColor: Colors.amber,

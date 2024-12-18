@@ -42,13 +42,6 @@ class _FeedbackPageState extends State<FeedbackPage> {
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: ThemeService.secondaryBackgroundColor,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
           child: Form(
             key: _viewModel.formKey,
             child: Column(
@@ -59,20 +52,21 @@ class _FeedbackPageState extends State<FeedbackPage> {
                 TextFormField(
                   controller: _viewModel.startDateController,
                   readOnly: true,
+                  style: TextStyle(color: ThemeService.secondaryColor),
                   decoration: const InputDecoration(
                     labelText: "Start Date",
-                    labelStyle: TextStyle(color: ThemeService.primaryColor),
+                    labelStyle: TextStyle(color: ThemeService.secondaryBackgroundColor),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: ThemeService
-                            .primaryColor, // Border color when not focused
+                            .secondaryBackgroundColor, // Border color when not focused
                         width: 1.5, // Border width
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: ThemeService
-                            .primaryColor, // Border color when focused
+                            .secondaryBackgroundColor, // Border color when focused
                         width: 2.0, // Border width
                       ),
                     ),
@@ -82,20 +76,21 @@ class _FeedbackPageState extends State<FeedbackPage> {
                 TextFormField(
                   controller: _viewModel.endDateController,
                   readOnly: true,
+                  style: TextStyle(color: ThemeService.secondaryColor),
                   decoration: const InputDecoration(
                     labelText: "End Date",
-                    labelStyle: TextStyle(color: ThemeService.primaryColor),
+                    labelStyle: TextStyle(color: ThemeService.secondaryBackgroundColor),
                     border: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: ThemeService
-                            .primaryColor, // Border color when not focused
+                            .secondaryBackgroundColor, // Border color when not focused
                         width: 1.5, // Border width
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: ThemeService
-                            .primaryColor, // Border color when focused
+                            .secondaryBackgroundColor, // Border color when focused
                         width: 2.0, // Border width
                       ),
                     ),
@@ -120,14 +115,12 @@ class _FeedbackPageState extends State<FeedbackPage> {
                           children: [
                             Text(
                               category,
+                              style: TextStyle(
+                                color: ThemeService.primaryColor, // Set value text color
+                              ),
                             ),
                           ],
                         ),
-                        //   decoration: BoxDecoration(
-                        //       color: category == _viewModel.selectedCategory
-                        //           ? ThemeService.primaryColor
-                        //               .withOpacity(0.05)
-                        //           : Colors.white),
                       ),
                     ),
                   ))
@@ -137,17 +130,17 @@ class _FeedbackPageState extends State<FeedbackPage> {
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide(
                         width: 2,
-                        color: ThemeService.primaryColor,
+                        color: ThemeService.secondaryBackgroundColor,
                       ),
                     ),
                     floatingLabelStyle: TextStyle(
-                        color: ThemeService.primaryColor,
+                        color: ThemeService.secondaryBackgroundColor,
                         fontWeight: FontWeight.bold),
                     labelText: 'Category',
                     labelStyle: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Colors.grey,
+                      color: ThemeService.secondaryBackgroundColor,
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
